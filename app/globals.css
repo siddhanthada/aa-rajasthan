@@ -20,11 +20,19 @@
   --color-border: var(--color-border);
   --font-sans: var(--font-ibm-plex-sans), var(--font-ibm-plex-sans-devanagari),
     sans-serif;
-  --radius-sm: 2px;
 }
 
 body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
