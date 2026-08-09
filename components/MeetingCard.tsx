@@ -25,54 +25,51 @@ export default function MeetingCard({
   isToday: boolean;
 }) {
   return (
-    <li
-      className={`border border-border bg-paper p-4 ${
-        isToday ? "border-t-2 border-t-indigo" : ""
-      }`}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-medium text-ink">{meeting.groupName}</h3>
-        {isToday && (
-          <span className="shrink-0 border border-indigo px-1.5 py-0.5 text-xs font-medium text-indigo">
-            Today
-          </span>
-        )}
+    <li className="break-inside-avoid border-b border-border py-1.5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-2">
+        <span className="text-sm font-medium text-ink">
+          {meeting.groupName}
+          {isToday && (
+            <span className="ml-1.5 text-xs font-medium text-indigo">
+              Today
+            </span>
+          )}
+        </span>
+        <span className="text-xs text-ink-muted">
+          {formatDays(meeting.daysOfWeek)} ·{" "}
+          {formatTimeRange(meeting.startTime, meeting.endTime)}
+        </span>
       </div>
 
-      <p className="mt-1 text-sm text-ink">
-        {formatDays(meeting.daysOfWeek)} · {formatTimeRange(
-          meeting.startTime,
-          meeting.endTime,
-        )}
-      </p>
-
-      <p className="mt-1 text-sm text-ink-muted">
-        {meeting.format === "online"
-          ? "Online meeting"
-          : `${meeting.venueName}, ${meeting.venueLocality}`}
-        {meeting.format === "hybrid" && " · also online"}
-      </p>
-      <p className="text-sm text-ink-muted">{meeting.districtName}</p>
-
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-        <span className="border border-terracotta px-1.5 py-0.5 font-medium text-terracotta">
-          {meeting.access === "open" ? "Open meeting" : "Closed meeting"}
+      <div className="flex flex-wrap items-center justify-between gap-x-2 text-xs text-ink-muted">
+        <span>
+          {meeting.format === "online"
+            ? "Online"
+            : `${meeting.venueName}, ${meeting.venueLocality}`}
+          {meeting.format === "hybrid" && " · also online"}
+          {" · "}
+          {meeting.districtName}
         </span>
-        <span className="border border-border px-1.5 py-0.5 text-ink-muted">
+      </div>
+
+      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+        <span className="border border-terracotta px-1 py-px font-medium text-terracotta">
+          {meeting.access === "open" ? "Open" : "Closed"}
+        </span>
+        <span className="border border-border px-1 py-px text-ink-muted">
           {formatFormat(meeting.format)}
         </span>
         {meeting.languages.map((lang) => (
           <span
             key={lang}
-            className="border border-border px-1.5 py-0.5 text-ink-muted"
+            className="border border-border px-1 py-px text-ink-muted"
           >
             {formatLanguage(lang)}
           </span>
         ))}
-      </div>
-
-      <div className="mt-3 text-xs text-sandstone">
-        {verificationLabel(meeting)}
+        <span className="ml-auto text-sandstone">
+          {verificationLabel(meeting)}
+        </span>
       </div>
     </li>
   );

@@ -9,28 +9,15 @@ export default function Home() {
   const today = new Date().getDay();
 
   return (
-    <div className="flex flex-1 flex-col">
-      <header className="relative overflow-hidden border-b border-border bg-paper">
-        <div
-          className="jali-bg pointer-events-none absolute inset-0 opacity-[0.06]"
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-5xl px-4 py-10 sm:px-6">
-          <h1 className="text-2xl font-semibold text-ink sm:text-3xl">
-            Find an AA Meeting in Rajasthan
-          </h1>
-          <p className="mt-2 max-w-xl text-ink-muted">
-            Browse current, verified Alcoholics Anonymous meetings by
-            district. No account or personal details needed.
-          </p>
-        </div>
-      </header>
+    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-4 sm:px-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-b border-border pb-3">
+        <h1 className="text-lg font-semibold text-ink sm:text-xl">
+          Find an AA Meeting in Rajasthan
+        </h1>
+        <HelplineBar />
+      </div>
 
-      <HelplineBar />
-
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6">
-        <Finder districts={districts} meetings={meetings} today={today} />
-      </main>
-    </div>
+      <Finder districts={districts} meetings={meetings} today={today} />
+    </main>
   );
 }

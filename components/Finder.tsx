@@ -44,7 +44,7 @@ export default function Finder({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => setDistrictId("")}
@@ -74,7 +74,7 @@ export default function Finder({
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-3 flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-sm text-ink-muted">
           Day
           <select
@@ -129,12 +129,12 @@ export default function Finder({
         )}
       </div>
 
-      <p className="mt-4 text-sm text-ink-muted">
+      <p className="mt-3 text-sm text-ink-muted">
         {filtered.length} meeting{filtered.length === 1 ? "" : "s"} found
       </p>
 
       {filtered.length > 0 ? (
-        <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-1 lg:columns-2 lg:gap-x-8">
           {filtered.map((m) => (
             <MeetingCard
               key={m.id}

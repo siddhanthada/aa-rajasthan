@@ -44,7 +44,7 @@ Home (= Find a Meeting, merged — no separate landing page)
 
 ## Design system
 
-**Principle:** this should read as a trustworthy public-service resource, not a startup product. Think GOV.UK-level restraint — plain, text-first, earns trust through clarity rather than polish — with exactly one deliberate regional flourish (see "The one flourish" below). Not sterile, not decorated.
+**Principle:** this should read as a trustworthy public-service resource, not a startup product. Think GOV.UK-level restraint — plain, text-first, earns trust through clarity rather than polish — with exactly one deliberate regional flourish (see "The one flourish" below), applied so subtly it's barely noticed. Not sterile, not decorated.
 
 **Never do these, no matter how tempting Tailwind defaults make them:**
 - No gradients, anywhere
@@ -56,6 +56,10 @@ Home (= Find a Meeting, merged — no separate landing page)
 - No big `rounded-2xl` soft cards
 - No default Inter/Poppins/Manrope — use the type system below
 - No purple-to-blue SaaS gradient color schemes
+
+**No hero sections, anywhere on the site.** No large centered/left title paired with a separate descriptive subtitle sentence, no decorative band above the functional content, no bounded "header zone" with its own background treatment. A page gets one compact heading line (18-22px, not display-size) that sits directly among the functional content — filters, results, whatever the page's job is — starting near the very top of the viewport. If a page needs explanatory text, it's one short line next to the heading, not a separate paragraph beneath it. Test: on the finder page, the district filter buttons should be visible without scrolling on a 700px-tall viewport. If they're not, the header is too big.
+
+**Default to dense list layout, not a card grid.** Meeting results are a single-column list on mobile (the real target) with hairline dividers between rows, not boxed cards with 16px+ internal padding and 20px+ gaps between them. Think a train departures board or a timetable, not a product grid. If a card treatment is used at all, padding stays under 12px and gaps under 8px — tight enough that the page reads as dense information, not spaced-out listings. On wider viewports this can become two columns at most; never three.
 
 **Typography:** IBM Plex Sans for everything, Latin and Devanagari both — it's one family with native support for both scripts, so Hindi headings/body never look like a bolted-on second font. Load `IBM Plex Sans` and `IBM Plex Sans Devanagari`.
 
@@ -78,7 +82,7 @@ Home (= Find a Meeting, merged — no separate landing page)
 
 **Motion:** none or near-none. No animation library. A simple opacity/color transition on hover/focus is fine; nothing else.
 
-**The one flourish:** a jali-lattice-inspired geometric pattern (Rajasthani architectural motif, abstracted — not photographic, not colorful) used as a very low-opacity (4–8%) monochrome background texture. Use it in at most one place per screen — the hero background on the homepage, or an empty-state illustration substitute. Never as a border decoration, never repeated multiple times on one screen, never in an accent color (ink or indigo only, at low opacity).
+**The one flourish:** a jali-lattice-inspired geometric pattern (Rajasthani architectural motif, abstracted — not photographic, not colorful), used as page-level ambient texture at 2-3% opacity maximum, in `ink` only. It must never be a bounded decorative section, band, or header treatment with its own visual footprint — if it's legible as "a pattern" when someone glances at the page, it's too strong; it should only be noticeable on close inspection, like a watermark on paper. The only acceptable uses: (a) extremely faint full-page background texture behind everything, or (b) an empty-state illustration substitute. If in doubt, cut the opacity in half again.
 
 Starter tileable pattern to refine visually once it's in the browser — an octagon-and-star lattice, the most common jali geometry:
 

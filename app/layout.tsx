@@ -27,6 +27,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${ibmPlexSans.variable} ${ibmPlexSansDevanagari.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink antialiased">
+        <div
+          className="jali-bg pointer-events-none fixed inset-0 opacity-[0.025]"
+          aria-hidden="true"
+        />
         {children}
       </body>
     </html>
