@@ -3,32 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, DoorOpen } from "lucide-react";
-
-const QUICK_EXIT_URL = "https://www.google.com";
+import { Menu, X, ChevronDown, Phone } from "lucide-react";
 
 const LEARN_LINKS = [
   { href: "/learn/new-to-aa", label: "New to AA" },
   { href: "/learn/concerned-about-someone", label: "Concerned about someone" },
   { href: "/learn/about-aa", label: "About AA" },
 ];
-
-function quickExit() {
-  window.location.replace(QUICK_EXIT_URL);
-}
-
-function QuickExitButton({ className = "" }: { className?: string }) {
-  return (
-    <button
-      type="button"
-      aria-label="Quickly leave this site"
-      onClick={quickExit}
-      className={className}
-    >
-      <DoorOpen size={20} />
-    </button>
-  );
-}
 
 function LearnDropdown({ active }: { active: boolean }) {
   const [open, setOpen] = useState(false);
@@ -56,10 +37,10 @@ function LearnDropdown({ active }: { active: boolean }) {
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen(true)}
-        className={`flex items-center gap-1 text-sm font-medium text-white transition-colors ${
+        className={`flex items-center gap-1 text-[13px] font-medium text-white transition-colors ${
           active
-            ? "rounded-full bg-white/12 px-3.5 py-1.5 opacity-100"
-            : "px-3.5 py-1.5 opacity-70 hover:opacity-100"
+            ? "rounded-full bg-white/12 px-3 py-1.5 opacity-100"
+            : "px-3 py-1.5 opacity-70 hover:opacity-100"
         }`}
       >
         Learn
@@ -69,7 +50,7 @@ function LearnDropdown({ active }: { active: boolean }) {
       {open && (
         <div
           role="menu"
-          className="absolute left-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-white p-1"
+          className="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-white p-1"
         >
           {LEARN_LINKS.map((link) => (
             <Link
@@ -95,7 +76,7 @@ export default function TopBar() {
 
   return (
     <div className="relative shrink-0 bg-indigo">
-      <div className="relative flex h-16 items-center gap-8 px-4 sm:px-6">
+      <div className="relative flex h-14 items-center px-4 sm:px-6">
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full"
           aria-hidden="true"
@@ -126,33 +107,38 @@ export default function TopBar() {
 
         <Link
           href="/"
-          className="relative shrink-0 text-base font-semibold text-white"
+          className="relative shrink-0 text-[15px] font-semibold text-white"
         >
           AA Rajasthan
         </Link>
 
-        <nav className="relative hidden flex-1 items-center gap-2 md:flex">
-          <Link
-            href="/"
-            className={`text-sm font-medium text-white transition-colors ${
-              pathname === "/"
-                ? "rounded-full bg-white/12 px-3.5 py-1.5 opacity-100"
-                : "px-3.5 py-1.5 opacity-70 hover:opacity-100"
-            }`}
-          >
-            Find a meeting
-          </Link>
-          <LearnDropdown active={learnActive} />
-        </nav>
+        <p className="relative hidden flex-1 text-center text-[13px] text-white/70 md:block">
+          You don&rsquo;t have to do this alone.
+        </p>
 
-        <div className="relative ml-auto flex items-center gap-4">
+        <div className="relative ml-auto flex items-center gap-3">
+          <nav className="hidden items-center gap-1 md:flex">
+            <Link
+              href="/"
+              className={`text-[13px] font-medium text-white transition-colors ${
+                pathname === "/"
+                  ? "rounded-full bg-white/12 px-3 py-1.5 opacity-100"
+                  : "px-3 py-1.5 opacity-70 hover:opacity-100"
+              }`}
+            >
+              Find a meeting
+            </Link>
+            <LearnDropdown active={learnActive} />
+          </nav>
+
           <a
             href="tel:+911414000000"
-            className="rounded-lg bg-terracotta px-4 py-2 text-sm font-semibold text-white"
+            className="flex items-center gap-1.5 rounded-lg bg-terracotta px-3 py-1.5 text-[13px] font-semibold text-white"
           >
-            Helpline
+            <Phone size={14} />
+            +91 141 400 0000
           </a>
-          <QuickExitButton className="hidden text-white md:block" />
+
           <button
             type="button"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -160,9 +146,10 @@ export default function TopBar() {
             onClick={() => setMobileOpen((v) => !v)}
             className="text-white md:hidden"
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
-          <button type="button" className="text-sm text-white">
+
+          <button type="button" className="text-[13px] text-white">
             EN | HI
           </button>
         </div>
@@ -196,8 +183,6 @@ export default function TopBar() {
           ))}
         </nav>
       )}
-
-      <QuickExitButton className="fixed bottom-4 right-4 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-indigo text-white md:hidden" />
     </div>
   );
 }

@@ -53,6 +53,13 @@ export function getMeetingById(id: string): Meeting | undefined {
   return meetings.find((m) => m.id === id);
 }
 
+export function getMeetingWithDetailsById(
+  id: string,
+): MeetingWithDetails | undefined {
+  const meeting = meetings.find((m) => m.id === id && m.published);
+  return meeting ? withDetails(meeting) : undefined;
+}
+
 export function getMeetingsWithDetails(
   filters: MeetingFilters = {},
 ): MeetingWithDetails[] {

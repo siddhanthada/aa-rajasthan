@@ -41,7 +41,7 @@ export default function FilterDropdown({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 text-sm text-ink"
+        className="flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 text-sm text-ink"
       >
         <span>{current.label}</span>
         <ChevronDown size={16} className="shrink-0 text-ink-muted" />

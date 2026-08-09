@@ -75,7 +75,7 @@ export default function Finder({
           type="button"
           onClick={() => setDistrictId("")}
           aria-pressed={districtId === ""}
-          className={`h-10 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+          className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
             districtId === ""
               ? "border-indigo bg-indigo text-white"
               : "border-border bg-white text-ink"
@@ -89,7 +89,7 @@ export default function Finder({
             type="button"
             onClick={() => setDistrictId(d.id)}
             aria-pressed={districtId === d.id}
-            className={`h-10 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+            className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
               districtId === d.id
                 ? "border-indigo bg-indigo text-white"
                 : "border-border bg-white text-ink"
@@ -100,7 +100,7 @@ export default function Finder({
         ))}
       </div>
 
-      <div className="mt-4 hidden items-center gap-3 md:flex">
+      <div className="mt-2 hidden items-center gap-3 md:flex">
         <FilterDropdown
           ariaLabel="Day"
           value={day}
@@ -134,11 +134,11 @@ export default function Finder({
         )}
       </div>
 
-      <div className="mt-4 md:hidden">
+      <div className="mt-2 md:hidden">
         <button
           type="button"
           onClick={() => setMobileFiltersOpen(true)}
-          className="flex h-10 items-center gap-2 rounded-lg border border-border bg-white px-3.5 text-sm text-ink"
+          className="flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3.5 text-sm text-ink"
         >
           <SlidersHorizontal size={16} className="text-ink-muted" />
           Filters
