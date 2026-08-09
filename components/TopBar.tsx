@@ -1,48 +1,97 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, DoorOpen } from "lucide-react";
 
-const NAV_LINKS = [
-  { href: "/", label: "Find a meeting" },
-  { href: "/new-to-aa", label: "New to AA" },
-  { href: "/concerned-about-someone", label: "Concerned about someone" },
-  { href: "/about", label: "About AA" },
+const QUICK_EXIT_URL = "https://www.google.com";
+
+const LEARN_LINKS = [
+  { href: "/learn/new-to-aa", label: "New to AA" },
+  { href: "/learn/concerned-about-someone", label: "Concerned about someone" },
+  { href: "/learn/about-aa", label: "About AA" },
 ];
 
-function NavLink({
-  href,
-  label,
-  active,
-  onClick,
-  className = "",
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-  onClick?: () => void;
-  className?: string;
-}) {
+function quickExit() {
+  window.location.replace(QUICK_EXIT_URL);
+}
+
+function QuickExitButton({ className = "" }: { className?: string }) {
   return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className={`text-sm font-medium text-white transition-colors ${
-        active
-          ? "rounded-full bg-white/12 px-3.5 py-1.5 opacity-100"
-          : "px-3.5 py-1.5 opacity-70 hover:opacity-100"
-      } ${className}`}
+    <button
+      type="button"
+      aria-label="Quickly leave this site"
+      onClick={quickExit}
+      className={className}
     >
-      {label}
-    </Link>
+      <DoorOpen size={20} />
+    </button>
+  );
+}
+
+function LearnDropdown({ active }: { active: boolean }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+        className={`flex items-center gap-1 text-sm font-medium text-white transition-colors ${
+          active
+            ? "rounded-full bg-white/12 px-3.5 py-1.5 opacity-100"
+            : "px-3.5 py-1.5 opacity-70 hover:opacity-100"
+        }`}
+      >
+        Learn
+        <ChevronDown size={14} />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute left-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-white p-1"
+        >
+          {LEARN_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-3 text-sm text-ink hover:bg-paper"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
 export default function TopBar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const learnActive = pathname.startsWith("/learn");
 
   return (
     <div className="relative shrink-0 bg-indigo">
@@ -83,14 +132,17 @@ export default function TopBar() {
         </Link>
 
         <nav className="relative hidden flex-1 items-center gap-2 md:flex">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.href}
-              href={link.href}
-              label={link.label}
-              active={pathname === link.href}
-            />
-          ))}
+          <Link
+            href="/"
+            className={`text-sm font-medium text-white transition-colors ${
+              pathname === "/"
+                ? "rounded-full bg-white/12 px-3.5 py-1.5 opacity-100"
+                : "px-3.5 py-1.5 opacity-70 hover:opacity-100"
+            }`}
+          >
+            Find a meeting
+          </Link>
+          <LearnDropdown active={learnActive} />
         </nav>
 
         <div className="relative ml-auto flex items-center gap-4">
@@ -100,6 +152,7 @@ export default function TopBar() {
           >
             Helpline
           </a>
+          <QuickExitButton className="hidden text-white md:block" />
           <button
             type="button"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -117,7 +170,19 @@ export default function TopBar() {
 
       {mobileOpen && (
         <nav className="w-full bg-indigo md:hidden">
-          {NAV_LINKS.map((link) => (
+          <Link
+            href="/"
+            onClick={() => setMobileOpen(false)}
+            className={`block px-4 py-4 text-sm font-medium text-white ${
+              pathname === "/" ? "bg-white/12" : "opacity-70"
+            }`}
+          >
+            Find a meeting
+          </Link>
+          <div className="px-4 pt-3 pb-1 text-xs font-medium uppercase tracking-wide text-white/50">
+            Learn
+          </div>
+          {LEARN_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -131,6 +196,8 @@ export default function TopBar() {
           ))}
         </nav>
       )}
+
+      <QuickExitButton className="fixed bottom-4 right-4 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-indigo text-white md:hidden" />
     </div>
   );
 }

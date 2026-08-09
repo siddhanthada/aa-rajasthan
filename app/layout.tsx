@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Sans_Devanagari } from "next/font/google";
 import TopBar from "@/components/TopBar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-paper text-ink antialiased">
         <TopBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
