@@ -1,10 +1,12 @@
 # AA Rajasthan — project context
 
-Read this before doing any work in this repo. It's the standing brief — don't ask me to re-explain scope, design direction, or data shape; it's all here.
+Read this before doing any work in this repo. It's the standing brief for scope, IA, and data — don't ask me to re-explain those.
+
+Visual/UI direction is NOT in this file. It's specified fresh in each prompt, in full detail. Don't infer or invent styling — if a prompt doesn't specify something visual, ask rather than guess.
 
 ## What this is
 
-A mobile-first directory site so someone in Rajasthan can find a real, current AA meeting quickly, and so local volunteers can keep meeting data accurate without touching code. Loosely inspired by aapune.org, but with a cleaner IA and a civic/public-service visual language instead of a startup one.
+A mobile-first directory site so someone in Rajasthan can find a real, current AA meeting quickly, and so local volunteers can keep meeting data accurate without touching code. Loosely inspired by aapune.org, but with a cleaner IA.
 
 Core loop the whole product serves: **find a meeting reliably** + **admin can maintain it easily**. Nothing else matters more than those two things.
 
@@ -17,7 +19,7 @@ Do not scaffold Firebase, Firestore, or auth until explicitly asked to move to P
 ## Tech stack
 
 - Next.js (App Router), TypeScript
-- Tailwind for utility CSS — but overridden per the design system below, not Tailwind's default soft-UI look
+- Tailwind for utility CSS
 - Firestore later (Phase 3+), not now
 
 ## Information architecture
@@ -41,64 +43,6 @@ Home (= Find a Meeting, merged — no separate landing page)
 ├── Venues
 └── Corrections (public "report an issue" submissions)
 ```
-
-## Design system
-
-**Principle:** this should read as a trustworthy public-service resource, not a startup product. Think GOV.UK-level restraint — plain, text-first, earns trust through clarity rather than polish — with exactly one deliberate regional flourish (see "The one flourish" below), applied so subtly it's barely noticed. Not sterile, not decorated.
-
-**Never do these, no matter how tempting Tailwind defaults make them:**
-- No gradients, anywhere
-- No drop shadows / `shadow-lg` card elevation — use hairline borders instead
-- No glassmorphism / backdrop-blur
-- No floating 3D icons or icon illustrations
-- No stock photography or illustrated people — this is a sensitive-context site
-- No scroll-triggered fade/slide-in animations
-- No big `rounded-2xl` soft cards
-- No default Inter/Poppins/Manrope — use the type system below
-- No purple-to-blue SaaS gradient color schemes
-
-**No hero sections, anywhere on the site.** No large centered/left title paired with a separate descriptive subtitle sentence, no decorative band above the functional content, no bounded "header zone" with its own background treatment. A page gets one compact heading line (18-22px, not display-size) that sits directly among the functional content — filters, results, whatever the page's job is — starting near the very top of the viewport. If a page needs explanatory text, it's one short line next to the heading, not a separate paragraph beneath it. Test: on the finder page, the district filter buttons should be visible without scrolling on a 700px-tall viewport. If they're not, the header is too big.
-
-**Default to dense list layout, not a card grid.** Meeting results are a single-column list on mobile (the real target) with hairline dividers between rows, not boxed cards with 16px+ internal padding and 20px+ gaps between them. Think a train departures board or a timetable, not a product grid. If a card treatment is used at all, padding stays under 12px and gaps under 8px — tight enough that the page reads as dense information, not spaced-out listings. On wider viewports this can become two columns at most; never three.
-
-**Typography:** IBM Plex Sans for everything, Latin and Devanagari both — it's one family with native support for both scripts, so Hindi headings/body never look like a bolted-on second font. Load `IBM Plex Sans` and `IBM Plex Sans Devanagari`.
-
-**Color palette (hex):**
-| Token | Hex | Use |
-|---|---|---|
-| `paper` | `#F7F4EE` | page background — warm, not clinical white |
-| `ink` | `#22201C` | primary text |
-| `ink-muted` | `#6B675E` | secondary/meta text |
-| `indigo` | `#2B3A55` | primary accent — links, primary actions, top-border emphasis |
-| `terracotta` | `#B5502E` | secondary accent — tags, alerts, "open meeting" type labels |
-| `sandstone` | `#8A6D3B` | tertiary, used sparingly — small metadata like "verified" dates |
-| `border` | `#D8D2C4` | hairline borders, 0.5–1px |
-
-**Corners:** sharp to near-sharp, 0–2px radius. Never `rounded-xl`/`rounded-2xl`.
-
-**Elevation:** none via shadow. Use a hairline border by default; for emphasis on a card (e.g. a featured/today's meeting), use a 2px solid top border in `indigo` instead of a shadow.
-
-**Density:** text-forward, real information density — meeting cards should read like a transit/timetable listing, not a marketing feature card. Avoid large empty marketing-style whitespace blocks.
-
-**Motion:** none or near-none. No animation library. A simple opacity/color transition on hover/focus is fine; nothing else.
-
-**The one flourish:** a jali-lattice-inspired geometric pattern (Rajasthani architectural motif, abstracted — not photographic, not colorful), used as page-level ambient texture at 2-3% opacity maximum, in `ink` only. It must never be a bounded decorative section, band, or header treatment with its own visual footprint — if it's legible as "a pattern" when someone glances at the page, it's too strong; it should only be noticeable on close inspection, like a watermark on paper. The only acceptable uses: (a) extremely faint full-page background texture behind everything, or (b) an empty-state illustration substitute. If in doubt, cut the opacity in half again.
-
-Starter tileable pattern to refine visually once it's in the browser — an octagon-and-star lattice, the most common jali geometry:
-
-```html
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <pattern id="jali" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M24 0 L48 24 L24 48 L0 24 Z M24 10 L38 24 L24 38 L10 24 Z"
-            fill="none" stroke="#22201C" stroke-width="1"/>
-    </pattern>
-  </defs>
-</svg>
-<!-- apply as: background-image: url(#jali) at opacity 0.05–0.08, or as an SVG rect fill="url(#jali)" -->
-```
-
-Treat this as a rough starting geometry, not a final asset — adjust scale/opacity once you can actually see it against the paper background.
 
 ## Data model
 

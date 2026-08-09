@@ -28,10 +28,3 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
-
-/* Jali lattice motif — the single permitted decorative flourish.
-   Used at low opacity in one place per screen only (see CLAUDE.md). */
-.jali-bg {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 0 L48 24 L24 48 L0 24 Z M24 10 L38 24 L24 38 L10 24 Z' fill='none' stroke='%2322201C' stroke-width='1'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-}
