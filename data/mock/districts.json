@@ -1,0 +1,7 @@
+[
+  { "id": "jaipur", "name": "Jaipur", "displayOrder": 1 },
+  { "id": "jodhpur", "name": "Jodhpur", "displayOrder": 2 },
+  { "id": "udaipur", "name": "Udaipur", "displayOrder": 3 },
+  { "id": "kota", "name": "Kota", "displayOrder": 4 },
+  { "id": "ajmer", "name": "Ajmer", "displayOrder": 5 }
+]

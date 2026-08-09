@@ -1,0 +1,82 @@
+[
+  {
+    "id": "v-jaipur-cscheme",
+    "name": "Sanjivani Seva Kendra Hall",
+    "address": "Behind Ashok Nagar Post Office, C-Scheme",
+    "locality": "C-Scheme",
+    "districtId": "jaipur",
+    "mapLink": "https://maps.google.com/?q=Sanjivani+Seva+Kendra+Hall+Jaipur"
+  },
+  {
+    "id": "v-jaipur-malviya",
+    "name": "St. Xavier's Community Hall",
+    "address": "Near Malviya Nagar Police Station, Malviya Nagar",
+    "locality": "Malviya Nagar",
+    "districtId": "jaipur",
+    "mapLink": "https://maps.google.com/?q=St+Xaviers+Community+Hall+Jaipur"
+  },
+  {
+    "id": "v-jodhpur-ratanada",
+    "name": "Umaid Bhawan Community Centre",
+    "address": "Ratanada Road, near Circuit House",
+    "locality": "Ratanada",
+    "districtId": "jodhpur",
+    "mapLink": "https://maps.google.com/?q=Ratanada+Community+Centre+Jodhpur"
+  },
+  {
+    "id": "v-jodhpur-sardarpura",
+    "name": "Sardarpura Seva Sadan",
+    "address": "8th Road, Sardarpura",
+    "locality": "Sardarpura",
+    "districtId": "jodhpur",
+    "mapLink": "https://maps.google.com/?q=Sardarpura+Seva+Sadan+Jodhpur"
+  },
+  {
+    "id": "v-udaipur-fatehpura",
+    "name": "Fatehpura Community Hall",
+    "address": "Near Fatehpura Circle",
+    "locality": "Fatehpura",
+    "districtId": "udaipur",
+    "mapLink": "https://maps.google.com/?q=Fatehpura+Community+Hall+Udaipur"
+  },
+  {
+    "id": "v-udaipur-hiranmagri",
+    "name": "Hiran Magri Sector 4 Hall",
+    "address": "Sector 4, Hiran Magri",
+    "locality": "Hiran Magri",
+    "districtId": "udaipur",
+    "mapLink": "https://maps.google.com/?q=Hiran+Magri+Sector+4+Hall+Udaipur"
+  },
+  {
+    "id": "v-kota-vigyannagar",
+    "name": "Vigyan Nagar Seva Kendra",
+    "address": "Near Vigyan Nagar Chauraha",
+    "locality": "Vigyan Nagar",
+    "districtId": "kota",
+    "mapLink": "https://maps.google.com/?q=Vigyan+Nagar+Seva+Kendra+Kota"
+  },
+  {
+    "id": "v-kota-talwandi",
+    "name": "Talwandi Community Hall",
+    "address": "Main Road, Talwandi",
+    "locality": "Talwandi",
+    "districtId": "kota",
+    "mapLink": "https://maps.google.com/?q=Talwandi+Community+Hall+Kota"
+  },
+  {
+    "id": "v-ajmer-vaishali",
+    "name": "Vaishali Nagar Seva Sadan",
+    "address": "Near Vaishali Nagar Circle",
+    "locality": "Vaishali Nagar",
+    "districtId": "ajmer",
+    "mapLink": "https://maps.google.com/?q=Vaishali+Nagar+Seva+Sadan+Ajmer"
+  },
+  {
+    "id": "v-ajmer-stationroad",
+    "name": "Ajmer Station Road Hall",
+    "address": "Opposite Ajmer Railway Station, Station Road",
+    "locality": "Station Road",
+    "districtId": "ajmer",
+    "mapLink": "https://maps.google.com/?q=Station+Road+Hall+Ajmer"
+  }
+]

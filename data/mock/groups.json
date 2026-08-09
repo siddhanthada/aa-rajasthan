@@ -1,0 +1,50 @@
+[
+  {
+    "id": "g-jaipur-newbeginnings",
+    "name": "New Beginnings Group",
+    "districtId": "jaipur",
+    "contactChannel": "Jaipur Group Helpline: +91 141 400 1122"
+  },
+  {
+    "id": "g-jaipur-pinkcity",
+    "name": "Pink City Serenity Group",
+    "districtId": "jaipur",
+    "contactChannel": "Jaipur Group Helpline: +91 141 400 1122"
+  },
+  {
+    "id": "g-jodhpur-bluecity",
+    "name": "Blue City Fellowship Group",
+    "districtId": "jodhpur",
+    "contactChannel": "Jodhpur Group Helpline: +91 291 400 3344"
+  },
+  {
+    "id": "g-jodhpur-suncity",
+    "name": "Sun City Recovery Group",
+    "districtId": "jodhpur",
+    "contactChannel": "Jodhpur Group Helpline: +91 291 400 3344"
+  },
+  {
+    "id": "g-udaipur-lakecity",
+    "name": "Lake City Group",
+    "districtId": "udaipur",
+    "contactChannel": "Udaipur Group Helpline: +91 294 400 5566"
+  },
+  {
+    "id": "g-kota-chambalvalley",
+    "name": "Chambal Valley Group",
+    "districtId": "kota",
+    "contactChannel": "Kota Group Helpline: +91 744 400 7788"
+  },
+  {
+    "id": "g-kota-junction",
+    "name": "Kota Junction Group",
+    "districtId": "kota",
+    "contactChannel": "Kota Group Helpline: +91 744 400 7788"
+  },
+  {
+    "id": "g-ajmer-pushkarroad",
+    "name": "Pushkar Road Group",
+    "districtId": "ajmer",
+    "contactChannel": "Ajmer Group Helpline: +91 145 400 9900"
+  }
+]
