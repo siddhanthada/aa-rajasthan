@@ -16,12 +16,15 @@ function LanguageToggle() {
   }
 
   return (
-    <div className="flex items-center rounded-full bg-white/10 p-0.5">
+    <div className="flex items-center gap-0.5 rounded-full bg-white/10 p-0.5">
       <button
         type="button"
         onClick={() => switchTo("en")}
-        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-          locale === "en" ? "text-white" : "text-white/60"
+        aria-pressed={locale === "en"}
+        className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+          locale === "en"
+            ? "bg-white/20 text-white"
+            : "text-white/60 hover:text-white/85"
         }`}
       >
         EN
@@ -29,11 +32,14 @@ function LanguageToggle() {
       <button
         type="button"
         onClick={() => switchTo("hi")}
-        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-          locale === "hi" ? "text-white" : "text-white/60"
+        aria-pressed={locale === "hi"}
+        className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+          locale === "hi"
+            ? "bg-white/20 text-white"
+            : "text-white/60 hover:text-white/85"
         }`}
       >
-        HI
+        हिंदी
       </button>
     </div>
   );
