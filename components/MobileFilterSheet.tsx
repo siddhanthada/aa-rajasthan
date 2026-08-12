@@ -43,7 +43,7 @@ export default function MobileFilterSheet({
   return (
     <div className="fixed inset-0 z-30 md:hidden">
       <div className="absolute inset-0 bg-ink/40" onClick={onClose} />
-      <div className="absolute inset-x-0 bottom-0 rounded-t-2xl bg-white p-4">
+      <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-ink">
             {t("filtersLabel")}

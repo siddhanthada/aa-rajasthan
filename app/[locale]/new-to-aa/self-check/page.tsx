@@ -18,12 +18,18 @@ const contentVariants: Variants = {
   exit: { opacity: 0, transition: { duration: 0.1, ease: EASE_STANDARD } },
 };
 
-function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
+function ReflectionPanel({
+  hasYes,
+  compact = false,
+}: {
+  hasYes: boolean;
+  compact?: boolean;
+}) {
   const t = useTranslations("selfCheck");
 
   return (
     <motion.div
-      className="rounded-xl p-5"
+      className={compact ? "rounded-xl p-3" : "rounded-xl p-5"}
       style={{ borderStyle: "solid" }}
       animate={{
         backgroundColor: hasYes ? "rgba(181,80,46,0.08)" : "#F7F4EE",
@@ -41,26 +47,56 @@ function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
             animate="visible"
             exit="exit"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta/15">
-              <HeartHandshake size={18} className="text-terracotta" />
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-ink">
-              {t("panel.resonates")}
-            </p>
-            <div className="mt-4 flex flex-col gap-2">
-              <Link
-                href="/"
-                className={`rounded-lg bg-indigo px-4 py-2.5 text-center text-sm font-semibold text-white ${pressable}`}
-              >
-                {t("findAMeeting")}
-              </Link>
-              <a
-                href="tel:+911414000000"
-                className={`rounded-lg border border-indigo px-4 py-2.5 text-center text-sm font-semibold text-indigo ${pressable}`}
-              >
-                {t("callHelpline")}
-              </a>
-            </div>
+            {compact ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <HeartHandshake
+                    size={16}
+                    className="shrink-0 text-terracotta"
+                  />
+                  <p className="line-clamp-1 flex-1 text-xs text-ink">
+                    {t("panel.resonates")}
+                  </p>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <Link
+                    href="/"
+                    className={`rounded-lg bg-indigo px-2 py-2 text-center text-xs font-semibold text-white ${pressable}`}
+                  >
+                    {t("findAMeeting")}
+                  </Link>
+                  <a
+                    href="tel:+911414000000"
+                    className={`rounded-lg border border-indigo px-2 py-2 text-center text-xs font-semibold text-indigo ${pressable}`}
+                  >
+                    {t("callHelpline")}
+                  </a>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta/15">
+                  <HeartHandshake size={18} className="text-terracotta" />
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-ink">
+                  {t("panel.resonates")}
+                </p>
+                <div className="mt-4 flex flex-col gap-2">
+                  <Link
+                    href="/"
+                    className={`rounded-lg bg-indigo px-4 py-2.5 text-center text-sm font-semibold text-white ${pressable}`}
+                  >
+                    {t("findAMeeting")}
+                  </Link>
+                  <a
+                    href="tel:+911414000000"
+                    className={`rounded-lg border border-indigo px-4 py-2.5 text-center text-sm font-semibold text-indigo ${pressable}`}
+                  >
+                    {t("callHelpline")}
+                  </a>
+                </div>
+              </>
+            )}
           </motion.div>
         ) : (
           <motion.div
@@ -180,8 +216,8 @@ export default function SelfCheck() {
       </Container>
 
       {answeredCount > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-paper p-4 lg:hidden">
-          <ReflectionPanel hasYes={hasYes} />
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-paper p-3 lg:hidden">
+          <ReflectionPanel hasYes={hasYes} compact />
         </div>
       )}
     </main>
