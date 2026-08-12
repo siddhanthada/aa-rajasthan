@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Clock, Navigation } from "lucide-react";
@@ -29,6 +30,15 @@ export default function MeetingTable({
   const tDays = useTranslations("days");
   const dayLabels = tDays.raw("short") as string[];
 
+  const headerScrollRef = useRef<HTMLDivElement>(null);
+  const bodyScrollRef = useRef<HTMLDivElement>(null);
+
+  function syncHeaderScroll() {
+    if (headerScrollRef.current && bodyScrollRef.current) {
+      headerScrollRef.current.scrollLeft = bodyScrollRef.current.scrollLeft;
+    }
+  }
+
   const GRID_COLUMNS =
     "minmax(220px, 260px) minmax(240px, 280px) minmax(260px, 1.4fr) minmax(220px, 260px) minmax(130px, 150px)";
 
@@ -43,23 +53,36 @@ export default function MeetingTable({
   return (
     <div className="rounded-xl border border-border bg-white">
       <div role="table">
+        {/* Sticky against page scroll; horizontal position is mirrored from
+            the body's real scroll container below, since an element can't
+            both be sticky-to-page and its own horizontal scroll container. */}
         <div
-          role="row"
-          className="sticky top-[68px] z-10 grid gap-x-6 rounded-t-xl bg-paper px-4 py-2.5"
-          style={{ gridTemplateColumns: GRID_COLUMNS }}
+          ref={headerScrollRef}
+          className="sticky top-[68px] z-10 overflow-hidden rounded-t-xl bg-paper"
         >
-          {COLUMNS.map((col) => (
-            <div
-              key={col}
-              role="columnheader"
-              className="text-xs font-medium uppercase tracking-wide text-ink-muted"
-            >
-              {col}
-            </div>
-          ))}
+          <div
+            role="row"
+            className="grid gap-x-6 px-4 py-2.5"
+            style={{ gridTemplateColumns: GRID_COLUMNS }}
+          >
+            {COLUMNS.map((col) => (
+              <div
+                key={col}
+                role="columnheader"
+                className="whitespace-nowrap text-xs font-medium uppercase tracking-wide text-ink-muted"
+              >
+                {col}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {meetings.map((m, index) => {
+        <div
+          ref={bodyScrollRef}
+          onScroll={syncHeaderScroll}
+          className="overflow-x-auto rounded-b-xl"
+        >
+          {meetings.map((m) => {
             const isToday = m.daysOfWeek.includes(today);
             const dayTime = formatDayTimeCompact(
               m.daysOfWeek,
@@ -85,9 +108,7 @@ export default function MeetingTable({
                 key={m.id}
                 role="row"
                 onClick={() => onSelect(m.id)}
-                className={`grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper ${
-                  index === meetings.length - 1 ? "rounded-b-xl" : ""
-                }`}
+                className="grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper"
                 style={{ gridTemplateColumns: GRID_COLUMNS }}
               >
                 <div role="cell">
@@ -164,6 +185,7 @@ export default function MeetingTable({
               </div>
             );
           })}
+        </div>
       </div>
     </div>
   );

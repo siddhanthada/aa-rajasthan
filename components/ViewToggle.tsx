@@ -12,19 +12,13 @@ export default function ViewToggle({
   const t = useTranslations("filters");
 
   return (
-    <div className="relative inline-flex items-center rounded-full border border-border bg-white p-1">
-      <div
-        className={`absolute inset-y-1 w-[calc(50%-4px)] rounded-full bg-indigo transition-transform duration-150 ease-out ${
-          view === "table" ? "translate-x-[calc(100%+8px)]" : "translate-x-0"
-        }`}
-        aria-hidden="true"
-      />
+    <div className="inline-flex items-center gap-0.5 rounded-full border border-border bg-white p-1">
       <button
         type="button"
         aria-pressed={view === "cards"}
         onClick={() => onChange("cards")}
-        className={`relative z-10 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-          view === "cards" ? "text-white" : "text-ink"
+        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          view === "cards" ? "bg-indigo text-white" : "text-ink hover:bg-paper"
         }`}
       >
         {t("cards")}
@@ -33,8 +27,8 @@ export default function ViewToggle({
         type="button"
         aria-pressed={view === "table"}
         onClick={() => onChange("table")}
-        className={`relative z-10 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-          view === "table" ? "text-white" : "text-ink"
+        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          view === "table" ? "bg-indigo text-white" : "text-ink hover:bg-paper"
         }`}
       >
         {t("table")}
