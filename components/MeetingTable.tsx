@@ -8,7 +8,7 @@ import type { MeetingWithDetails } from "@/lib/data/meetings";
 import { formatDayTimeCompact } from "@/lib/format";
 import { formatDistanceKm } from "@/lib/geo";
 import { MeetingTags, VerificationStatus, verificationLabel, tagsSummary } from "./MeetingCard";
-import { hoverTransition, pressable } from "@/lib/motion";
+import { hoverTransition, pressable, CARDS_START } from "@/lib/motion";
 
 function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
@@ -119,7 +119,9 @@ export default function MeetingTable({
                 style={{
                   gridTemplateColumns: GRID_COLUMNS,
                   ...(staggerEntrance
-                    ? { animationDelay: `${Math.min(index, STAGGER_CAP) * 40}ms` }
+                    ? {
+                        animationDelay: `${CARDS_START + Math.min(index, STAGGER_CAP) * 40}ms`,
+                      }
                     : {}),
                 }}
               >

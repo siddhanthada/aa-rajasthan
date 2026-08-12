@@ -22,7 +22,7 @@ import MeetingOverlay from "./MeetingOverlay";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 import MobileFilterSheet from "./MobileFilterSheet";
 import ViewToggle, { type ViewMode } from "./ViewToggle";
-import { hoverTransition, pressable } from "@/lib/motion";
+import { hoverTransition, pressable, FILTERS_START, CARDS_START } from "@/lib/motion";
 
 type GeoStatus = "idle" | "loading" | "active" | "error";
 
@@ -80,11 +80,15 @@ export default function Finder({
 
   // Initial-load stagger window: the first 6 result items get a staggered
   // entrance only while this is true, so later filter-driven re-renders
-  // (handled by the cross-fade below) don't replay it.
+  // (handled by the cross-fade below) don't replay it. Must stay true long
+  // enough to cover the full nav → tiles → filters → cards sequence, or
+  // the class gets removed before the delayed card animations ever start.
+  const SEQUENCE_END = CARDS_START + STAGGER_CAP * 40 + 280;
   const [initialLoad, setInitialLoad] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoad(false), 600);
+    const timer = setTimeout(() => setInitialLoad(false), SEQUENCE_END + 50);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleNearMe() {
@@ -232,7 +236,10 @@ export default function Finder({
 
   return (
     <div>
-      <div className="relative z-30 mt-5 flex flex-wrap items-center gap-2 animate-fade-rise">
+      <div
+        className="relative z-30 mt-5 flex flex-wrap items-center gap-2 animate-fade-rise"
+        style={{ animationDelay: `${FILTERS_START}ms` }}
+      >
         <button
           type="button"
           onClick={() => setTodayOnly((v) => !v)}
@@ -404,7 +411,7 @@ export default function Finder({
                   onSelect={setSelectedId}
                   entranceDelay={
                     initialLoad
-                      ? Math.min(index, STAGGER_CAP) * 40
+                      ? CARDS_START + Math.min(index, STAGGER_CAP) * 40
                       : undefined
                   }
                 />

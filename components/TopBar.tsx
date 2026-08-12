@@ -17,9 +17,17 @@ function LanguageToggle() {
     { left: 0, width: 0 },
   );
 
+  // Drives the slide direction from local, immediately-updated state
+  // rather than the route-derived `locale` — the actual navigation can
+  // take a while, and this component remounts on completion (fresh
+  // `locale` becomes the initial state then), so waiting for `locale`
+  // itself to change would make the indicator jump instead of sliding,
+  // or slide only after the page has already swapped.
+  const [activeLocale, setActiveLocale] = useState(locale);
+
   useLayoutEffect(() => {
     function measure() {
-      const el = locale === "en" ? enRef.current : hiRef.current;
+      const el = activeLocale === "en" ? enRef.current : hiRef.current;
       if (el) {
         setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
       }
@@ -27,9 +35,11 @@ function LanguageToggle() {
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [locale]);
+  }, [activeLocale]);
 
   function switchTo(nextLocale: "en" | "hi") {
+    if (nextLocale === activeLocale) return;
+    setActiveLocale(nextLocale);
     router.replace(pathname, { locale: nextLocale });
   }
 
@@ -47,9 +57,11 @@ function LanguageToggle() {
         ref={enRef}
         type="button"
         onClick={() => switchTo("en")}
-        aria-pressed={locale === "en"}
+        aria-pressed={activeLocale === "en"}
         className={`relative z-10 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
-          locale === "en" ? "text-white" : "text-white/60 hover:text-white/85"
+          activeLocale === "en"
+            ? "text-white"
+            : "text-white/60 hover:text-white/85"
         }`}
       >
         EN
@@ -58,9 +70,11 @@ function LanguageToggle() {
         ref={hiRef}
         type="button"
         onClick={() => switchTo("hi")}
-        aria-pressed={locale === "hi"}
+        aria-pressed={activeLocale === "hi"}
         className={`relative z-10 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
-          locale === "hi" ? "text-white" : "text-white/60 hover:text-white/85"
+          activeLocale === "hi"
+            ? "text-white"
+            : "text-white/60 hover:text-white/85"
         }`}
       >
         हिंदी
@@ -136,7 +150,7 @@ export default function TopBar() {
   ];
 
   return (
-    <div className="sticky top-0 z-40 shrink-0 bg-indigo">
+    <div className="sticky top-0 z-40 shrink-0 bg-indigo animate-fade-in">
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
         aria-hidden="true"

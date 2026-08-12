@@ -101,6 +101,30 @@ body {
   }
 }
 
+/* Nav chrome fade: subtle opacity-only fade for the top bar on page load
+   — quick and quiet, no slide, distinct from the slower fade+rise used
+   for content below it. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fade-in var(--duration-base) var(--ease-standard) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    opacity: 1;
+  }
+}
+
 /* Self-check progress dots: a small "pop" the instant a dot fills in,
    confirming the answer registered. Triggered by remounting the dot
    (via a key change) exactly when it transitions from empty to filled. */

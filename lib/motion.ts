@@ -12,3 +12,17 @@ export const pressable =
 
 export const tileHover =
   "motion-safe:transition-[border-color,transform] motion-safe:duration-[var(--duration-base)] motion-safe:ease-standard motion-safe:hover:-translate-y-0.5";
+
+// Page-load sequence timing (ms): nav fades in first, then the homepage
+// tiles stagger in, then the filter block, then the result cards/rows —
+// each stage's start delay is computed from when the previous one visibly
+// finishes, so the whole thing reads top-to-bottom rather than firing at
+// once. Values are derived from the duration tokens in globals.css.
+const NAV_DURATION = 200; // matches --duration-base
+export const TILE_STAGGER = 80;
+export const TILES_START = NAV_DURATION;
+const TILE_DURATION = 280; // matches --duration-slow
+const TILES_COUNT = 3;
+export const FILTERS_START =
+  TILES_START + (TILES_COUNT - 1) * TILE_STAGGER + TILE_DURATION;
+export const CARDS_START = FILTERS_START + TILE_DURATION;
