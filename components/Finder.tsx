@@ -16,6 +16,7 @@ import { dayName } from "@/lib/format";
 import { haversineDistanceKm } from "@/lib/geo";
 import MeetingCard from "./MeetingCard";
 import MeetingTable from "./MeetingTable";
+import MeetingOverlay from "./MeetingOverlay";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 import MobileFilterSheet from "./MobileFilterSheet";
 import ViewToggle, { type ViewMode } from "./ViewToggle";
@@ -58,6 +59,7 @@ export default function Finder({
   const [todayOnly, setTodayOnly] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<ViewMode>("cards");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
@@ -285,12 +287,18 @@ export default function Finder({
                 meeting={m}
                 isToday={m.daysOfWeek.includes(today)}
                 distanceKm={distances?.[m.id]}
+                onSelect={setSelectedId}
               />
             ))}
           </ul>
         ) : (
           <div className="mt-3">
-            <MeetingTable meetings={sorted} today={today} distances={distances} />
+            <MeetingTable
+              meetings={sorted}
+              today={today}
+              distances={distances}
+              onSelect={setSelectedId}
+            />
           </div>
         )
       ) : (
@@ -316,6 +324,11 @@ export default function Finder({
           </p>
         </div>
       )}
+
+      <MeetingOverlay
+        meeting={meetings.find((m) => m.id === selectedId) ?? null}
+        onClose={() => setSelectedId(null)}
+      />
     </div>
   );
 }

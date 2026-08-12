@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Clock, MapPin, Check, AlertTriangle, ChevronRight } from "lucide-react";
+import {
+  Clock,
+  MapPin,
+  Check,
+  AlertTriangle,
+  ChevronRight,
+  Navigation,
+} from "lucide-react";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
 import {
   formatDays,
@@ -86,14 +93,20 @@ export function VerificationStatus({
   );
 }
 
+function isModifiedClick(e: React.MouseEvent) {
+  return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
+}
+
 export default function MeetingCard({
   meeting,
   isToday,
   distanceKm,
+  onSelect,
 }: {
   meeting: MeetingWithDetails;
   isToday: boolean;
   distanceKm?: number;
+  onSelect?: (id: string) => void;
 }) {
   const venueLine =
     meeting.format === "online"
@@ -106,6 +119,11 @@ export default function MeetingCard({
     <li>
       <Link
         href={`/meetings/${meeting.id}`}
+        onClick={(e) => {
+          if (!onSelect || isModifiedClick(e)) return;
+          e.preventDefault();
+          onSelect(meeting.id);
+        }}
         className="group relative block rounded-xl border border-border bg-white p-4 transition-colors hover:border-indigo hover:bg-indigo/3"
       >
         {isToday && (
@@ -131,6 +149,20 @@ export default function MeetingCard({
               <> · {formatDistanceKm(distanceKm)}</>
             )}
           </span>
+          {meeting.mapLink && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(meeting.mapLink, "_blank", "noopener,noreferrer");
+              }}
+              aria-label={`Get directions to ${meeting.venueName ?? "venue"}`}
+              className="shrink-0 text-indigo"
+            >
+              <Navigation size={16} />
+            </button>
+          )}
         </p>
 
         <div className="my-3 border-t border-border" />
