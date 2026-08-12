@@ -74,6 +74,33 @@ body {
   }
 }
 
+/* Result card/row entrance: a touch more lift and a slight scale-in on
+   top of fade-rise, so the initial stagger reads as more deliberate
+   without adding extra motion beyond one keyframe. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-card-enter {
+    animation: card-enter var(--duration-slow) var(--ease-decel) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-enter {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Self-check progress dots: a small "pop" the instant a dot fills in,
    confirming the answer registered. Triggered by remounting the dot
    (via a key change) exactly when it transitions from empty to filled. */

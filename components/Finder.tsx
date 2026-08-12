@@ -178,7 +178,7 @@ export default function Finder({
 
   return (
     <div>
-      <div className="mt-5 flex flex-wrap items-center gap-2 animate-fade-rise">
+      <div className="relative z-30 mt-5 flex flex-wrap items-center gap-2 animate-fade-rise">
         <button
           type="button"
           onClick={() => setTodayOnly((v) => !v)}

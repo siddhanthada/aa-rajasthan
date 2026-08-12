@@ -143,7 +143,7 @@ export default function MeetingCard({
 
   return (
     <li
-      className={entranceDelay !== undefined ? "animate-fade-rise" : undefined}
+      className={entranceDelay !== undefined ? "animate-card-enter" : undefined}
       style={
         entranceDelay !== undefined
           ? { animationDelay: `${entranceDelay}ms` }

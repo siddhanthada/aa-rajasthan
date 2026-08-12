@@ -114,7 +114,7 @@ export default function MeetingTable({
                 role="row"
                 onClick={() => onSelect(m.id)}
                 className={`grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper ${hoverTransition} ${
-                  staggered ? "animate-fade-rise" : ""
+                  staggered ? "animate-card-enter" : ""
                 }`}
                 style={{
                   gridTemplateColumns: GRID_COLUMNS,
