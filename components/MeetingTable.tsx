@@ -14,18 +14,20 @@ function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
 }
 
+const STAGGER_CAP = 6;
+
 export default function MeetingTable({
   meetings,
   today,
   distances,
   onSelect,
-  staggerFirst = 0,
+  staggerEntrance = false,
 }: {
   meetings: MeetingWithDetails[];
   today: number;
   distances?: Record<string, number>;
   onSelect: (id: string) => void;
-  staggerFirst?: number;
+  staggerEntrance?: boolean;
 }) {
   const t = useTranslations("table");
   const tCard = useTranslations("card");
@@ -106,20 +108,18 @@ export default function MeetingTable({
                 ? ` · ${formatDistanceKm(distanceKm, tCard("kmAway"))}`
                 : "");
 
-            const staggered = index < staggerFirst;
-
             return (
               <div
                 key={m.id}
                 role="row"
                 onClick={() => onSelect(m.id)}
                 className={`grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper ${hoverTransition} ${
-                  staggered ? "animate-card-enter" : ""
+                  staggerEntrance ? "animate-card-enter" : ""
                 }`}
                 style={{
                   gridTemplateColumns: GRID_COLUMNS,
-                  ...(staggered
-                    ? { animationDelay: `${index * 40}ms` }
+                  ...(staggerEntrance
+                    ? { animationDelay: `${Math.min(index, STAGGER_CAP) * 40}ms` }
                     : {}),
                 }}
               >

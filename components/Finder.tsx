@@ -340,8 +340,8 @@ export default function Finder({
                   distanceKm={distances?.[m.id]}
                   onSelect={setSelectedId}
                   entranceDelay={
-                    initialLoad && index < STAGGER_CAP
-                      ? index * 40
+                    initialLoad
+                      ? Math.min(index, STAGGER_CAP) * 40
                       : undefined
                   }
                 />
@@ -354,7 +354,7 @@ export default function Finder({
                 today={today}
                 distances={distances}
                 onSelect={setSelectedId}
-                staggerFirst={initialLoad ? STAGGER_CAP : 0}
+                staggerEntrance={initialLoad}
               />
             </div>
           )
