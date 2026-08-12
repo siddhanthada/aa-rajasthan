@@ -8,10 +8,11 @@ import {
   formatTimeRange,
   formatDate,
 } from "@/lib/format";
+import { formatDistanceKm } from "@/lib/geo";
 
-function verificationLabel(
+export function verificationLabel(
   meeting: MeetingWithDetails,
-  compact: boolean,
+  compact: boolean = false,
 ): string {
   if (meeting.verificationStatus === "verified" && meeting.lastVerifiedAt) {
     return compact
@@ -24,6 +25,15 @@ function verificationLabel(
   return "Unverified";
 }
 
+export function tagsSummary(meeting: MeetingWithDetails): string {
+  const parts = [
+    meeting.access === "open" ? "Open" : "Closed",
+    formatFormat(meeting.format),
+    ...meeting.languages.map(formatLanguage),
+  ];
+  return parts.join(", ");
+}
+
 export function MeetingTags({
   meeting,
   compact = false,
@@ -32,11 +42,8 @@ export function MeetingTags({
   compact?: boolean;
 }) {
   const size = compact ? "px-2 py-0.5 text-[11px]" : "px-2 py-0.5 text-xs";
-  const wrap = compact
-    ? "flex-nowrap overflow-hidden"
-    : "flex-wrap";
   return (
-    <div className={`flex items-center gap-1.5 ${wrap}`}>
+    <div className="flex flex-wrap items-center gap-1.5">
       <span
         className={`shrink-0 rounded-lg font-medium text-white ${size} ${
           meeting.access === "open" ? "bg-terracotta" : "bg-ink-muted"
@@ -82,9 +89,11 @@ export function VerificationStatus({
 export default function MeetingCard({
   meeting,
   isToday,
+  distanceKm,
 }: {
   meeting: MeetingWithDetails;
   isToday: boolean;
+  distanceKm?: number;
 }) {
   const venueLine =
     meeting.format === "online"
@@ -116,7 +125,12 @@ export default function MeetingCard({
         </p>
         <p className="mt-1 flex items-start gap-1.5 text-[13px] text-ink-muted">
           <MapPin size={16} className="mt-0.5 shrink-0 text-ink-muted" />
-          <span className="line-clamp-2">{venueLine}</span>
+          <span className="line-clamp-2">
+            {venueLine}
+            {distanceKm !== undefined && Number.isFinite(distanceKm) && (
+              <> · {formatDistanceKm(distanceKm)}</>
+            )}
+          </span>
         </p>
 
         <div className="my-3 border-t border-border" />

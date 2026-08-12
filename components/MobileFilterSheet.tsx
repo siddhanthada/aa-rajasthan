@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, Calendar, Languages, SlidersHorizontal } from "lucide-react";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 
 export default function MobileFilterSheet({
@@ -52,18 +52,21 @@ export default function MobileFilterSheet({
             value={day}
             options={dayOptions}
             onChange={onDayChange}
+            icon={Calendar}
           />
           <FilterDropdown
             ariaLabel="Language"
             value={language}
             options={languageOptions}
             onChange={onLanguageChange}
+            icon={Languages}
           />
           <FilterDropdown
             ariaLabel="Format"
             value={format}
             options={formatOptions}
             onChange={onFormatChange}
+            icon={SlidersHorizontal}
           />
         </div>
 

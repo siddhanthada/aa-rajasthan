@@ -72,9 +72,15 @@ export default function NewToAA() {
           </section>
 
           <p className="text-sm leading-relaxed text-ink-muted">
-            A short self-check is coming soon to help you think this
-            through — it isn&rsquo;t a diagnosis, and you don&rsquo;t need to
-            take it before going to a meeting.
+            A short{" "}
+            <Link
+              href="/new-to-aa/self-check"
+              className="font-medium text-indigo underline underline-offset-2"
+            >
+              self-check
+            </Link>{" "}
+            can help you think this through — it isn&rsquo;t a diagnosis, and
+            you don&rsquo;t need to take it before going to a meeting.
           </p>
 
           <Link

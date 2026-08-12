@@ -1,15 +1,16 @@
 import Link from "next/link";
+import Container from "./Container";
 
 const FOOTER_LINKS = [
-  { href: "/learn/new-to-aa", label: "New to AA" },
-  { href: "/learn/concerned-about-someone", label: "Concerned about someone" },
-  { href: "/learn/about-aa", label: "About AA" },
+  { href: "/new-to-aa", label: "New to AA" },
+  { href: "/concerned-about-someone", label: "Concerned about someone" },
+  { href: "/about-aa", label: "About AA" },
 ];
 
 export default function Footer() {
   return (
     <footer className="bg-indigo py-8">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 sm:px-6">
+      <Container className="flex flex-col gap-3">
         <p className="text-sm text-white">
           AA Rajasthan — a community-maintained meeting directory
         </p>
@@ -37,7 +38,7 @@ export default function Footer() {
             No account needed. We don&rsquo;t track who searches here.
           </span>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

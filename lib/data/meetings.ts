@@ -19,6 +19,8 @@ export type MeetingWithDetails = Meeting & {
   venueName?: string;
   venueAddress?: string;
   venueLocality?: string;
+  venueLat?: number;
+  venueLng?: number;
   mapLink?: string;
   districtId: string;
   districtName: string;
@@ -39,6 +41,8 @@ function withDetails(meeting: Meeting): MeetingWithDetails | undefined {
     venueName: venue?.name,
     venueAddress: venue?.address,
     venueLocality: venue?.locality,
+    venueLat: venue?.lat,
+    venueLng: venue?.lng,
     mapLink: venue?.mapLink,
     districtId,
     districtName: district?.name ?? districtId,

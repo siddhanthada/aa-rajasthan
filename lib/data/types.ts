@@ -11,6 +11,8 @@ export type Venue = {
   locality: string;
   districtId: string;
   mapLink?: string;
+  lat: number;
+  lng: number;
 };
 
 export type Group = {

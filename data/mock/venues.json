@@ -5,7 +5,9 @@
     "address": "Behind Ashok Nagar Post Office, C-Scheme",
     "locality": "C-Scheme",
     "districtId": "jaipur",
-    "mapLink": "https://maps.google.com/?q=Sanjivani+Seva+Kendra+Hall+Jaipur"
+    "mapLink": "https://maps.google.com/?q=Sanjivani+Seva+Kendra+Hall+Jaipur",
+    "lat": 26.9124,
+    "lng": 75.7873
   },
   {
     "id": "v-jaipur-malviya",
@@ -13,7 +15,9 @@
     "address": "Near Malviya Nagar Police Station, Malviya Nagar",
     "locality": "Malviya Nagar",
     "districtId": "jaipur",
-    "mapLink": "https://maps.google.com/?q=St+Xaviers+Community+Hall+Jaipur"
+    "mapLink": "https://maps.google.com/?q=St+Xaviers+Community+Hall+Jaipur",
+    "lat": 26.9124,
+    "lng": 75.7873
   },
   {
     "id": "v-jodhpur-ratanada",
@@ -21,7 +25,9 @@
     "address": "Ratanada Road, near Circuit House",
     "locality": "Ratanada",
     "districtId": "jodhpur",
-    "mapLink": "https://maps.google.com/?q=Ratanada+Community+Centre+Jodhpur"
+    "mapLink": "https://maps.google.com/?q=Ratanada+Community+Centre+Jodhpur",
+    "lat": 26.2389,
+    "lng": 73.0243
   },
   {
     "id": "v-jodhpur-sardarpura",
@@ -29,7 +35,9 @@
     "address": "8th Road, Sardarpura",
     "locality": "Sardarpura",
     "districtId": "jodhpur",
-    "mapLink": "https://maps.google.com/?q=Sardarpura+Seva+Sadan+Jodhpur"
+    "mapLink": "https://maps.google.com/?q=Sardarpura+Seva+Sadan+Jodhpur",
+    "lat": 26.2389,
+    "lng": 73.0243
   },
   {
     "id": "v-udaipur-fatehpura",
@@ -37,7 +45,9 @@
     "address": "Near Fatehpura Circle",
     "locality": "Fatehpura",
     "districtId": "udaipur",
-    "mapLink": "https://maps.google.com/?q=Fatehpura+Community+Hall+Udaipur"
+    "mapLink": "https://maps.google.com/?q=Fatehpura+Community+Hall+Udaipur",
+    "lat": 24.5854,
+    "lng": 73.7125
   },
   {
     "id": "v-udaipur-hiranmagri",
@@ -45,7 +55,9 @@
     "address": "Sector 4, Hiran Magri",
     "locality": "Hiran Magri",
     "districtId": "udaipur",
-    "mapLink": "https://maps.google.com/?q=Hiran+Magri+Sector+4+Hall+Udaipur"
+    "mapLink": "https://maps.google.com/?q=Hiran+Magri+Sector+4+Hall+Udaipur",
+    "lat": 24.5854,
+    "lng": 73.7125
   },
   {
     "id": "v-kota-vigyannagar",
@@ -53,7 +65,9 @@
     "address": "Near Vigyan Nagar Chauraha",
     "locality": "Vigyan Nagar",
     "districtId": "kota",
-    "mapLink": "https://maps.google.com/?q=Vigyan+Nagar+Seva+Kendra+Kota"
+    "mapLink": "https://maps.google.com/?q=Vigyan+Nagar+Seva+Kendra+Kota",
+    "lat": 25.2138,
+    "lng": 75.8648
   },
   {
     "id": "v-kota-talwandi",
@@ -61,7 +75,9 @@
     "address": "Main Road, Talwandi",
     "locality": "Talwandi",
     "districtId": "kota",
-    "mapLink": "https://maps.google.com/?q=Talwandi+Community+Hall+Kota"
+    "mapLink": "https://maps.google.com/?q=Talwandi+Community+Hall+Kota",
+    "lat": 25.2138,
+    "lng": 75.8648
   },
   {
     "id": "v-ajmer-vaishali",
@@ -69,7 +85,9 @@
     "address": "Near Vaishali Nagar Circle",
     "locality": "Vaishali Nagar",
     "districtId": "ajmer",
-    "mapLink": "https://maps.google.com/?q=Vaishali+Nagar+Seva+Sadan+Ajmer"
+    "mapLink": "https://maps.google.com/?q=Vaishali+Nagar+Seva+Sadan+Ajmer",
+    "lat": 26.4499,
+    "lng": 74.6399
   },
   {
     "id": "v-ajmer-stationroad",
@@ -77,6 +95,8 @@
     "address": "Opposite Ajmer Railway Station, Station Road",
     "locality": "Station Road",
     "districtId": "ajmer",
-    "mapLink": "https://maps.google.com/?q=Station+Road+Hall+Ajmer"
+    "mapLink": "https://maps.google.com/?q=Station+Road+Hall+Ajmer",
+    "lat": 26.4499,
+    "lng": 74.6399
   }
 ]

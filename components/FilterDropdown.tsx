@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, type LucideIcon } from "lucide-react";
 
 export type DropdownOption = { value: string; label: string };
 
@@ -11,12 +11,14 @@ export default function FilterDropdown({
   options,
   onChange,
   className = "",
+  icon: Icon,
 }: {
   ariaLabel: string;
   value: string;
   options: DropdownOption[];
   onChange: (value: string) => void;
   className?: string;
+  icon?: LucideIcon;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -43,7 +45,10 @@ export default function FilterDropdown({
         onClick={() => setOpen((v) => !v)}
         className="flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 text-sm text-ink"
       >
-        <span>{current.label}</span>
+        <span className="flex min-w-0 items-center gap-2">
+          {Icon && <Icon size={16} className="shrink-0 text-ink-muted" />}
+          <span className="truncate">{current.label}</span>
+        </span>
         <ChevronDown size={16} className="shrink-0 text-ink-muted" />
       </button>
 

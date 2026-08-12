@@ -1,70 +1,38 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
+import Container from "./Container";
 
-const LEARN_LINKS = [
-  { href: "/learn/new-to-aa", label: "New to AA" },
-  { href: "/learn/concerned-about-someone", label: "Concerned about someone" },
-  { href: "/learn/about-aa", label: "About AA" },
+const NAV_LINKS = [
+  { href: "/", label: "Find a meeting" },
+  { href: "/about-aa", label: "About AA" },
 ];
 
-function LearnDropdown({ active }: { active: boolean }) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
-
+function LanguageToggle() {
+  const [lang, setLang] = useState<"en" | "hi">("en");
   return (
-    <div
-      ref={rootRef}
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <div className="flex items-center rounded-full bg-white/10 p-0.5">
       <button
         type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen(true)}
-        className={`flex items-center gap-1 text-[13px] font-medium text-white transition-colors ${
-          active
-            ? "rounded-full bg-white/12 px-3 py-1.5 opacity-100"
-            : "px-3 py-1.5 opacity-70 hover:opacity-100"
+        onClick={() => setLang("en")}
+        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+          lang === "en" ? "text-white" : "text-white/60"
         }`}
       >
-        Learn
-        <ChevronDown size={14} />
+        EN
       </button>
-
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-white p-1"
-        >
-          {LEARN_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              role="menuitem"
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-3 text-sm text-ink hover:bg-paper"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={() => setLang("hi")}
+        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+          lang === "hi" ? "text-white" : "text-white/60"
+        }`}
+      >
+        HI
+      </button>
     </div>
   );
 }
@@ -72,109 +40,96 @@ function LearnDropdown({ active }: { active: boolean }) {
 export default function TopBar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const learnActive = pathname.startsWith("/learn");
 
   return (
     <div className="relative shrink-0 bg-indigo">
-      <div className="relative flex h-14 items-center px-4 sm:px-6">
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          aria-hidden="true"
-        >
-          <defs>
-            <pattern
-              id="jali-topbar"
-              width="48"
-              height="48"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M24 0 L48 24 L24 48 L0 24 Z M24 10 L38 24 L24 38 L10 24 Z"
-                fill="none"
-                stroke="#F7F4EE"
-                strokeWidth="1"
-                strokeLinejoin="round"
-              />
-            </pattern>
-          </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="url(#jali-topbar)"
-            opacity="0.15"
-          />
-        </svg>
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern
+            id="jali-topbar"
+            width="48"
+            height="48"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M24 0 L48 24 L24 48 L0 24 Z M24 10 L38 24 L24 38 L10 24 Z"
+              fill="none"
+              stroke="#F7F4EE"
+              strokeWidth="1"
+              strokeLinejoin="round"
+            />
+          </pattern>
+        </defs>
+        <rect
+          width="100%"
+          height="100%"
+          fill="url(#jali-topbar)"
+          opacity="0.15"
+        />
+      </svg>
 
-        <Link
-          href="/"
-          className="relative shrink-0 text-[15px] font-semibold text-white"
-        >
-          AA Rajasthan
+      <Container className="relative flex h-[68px] items-center gap-4">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-terracotta text-[13px] font-semibold text-white">
+            AA
+          </span>
+          <span className="text-base font-semibold text-white">
+            Rajasthan
+          </span>
         </Link>
 
-        <p className="relative hidden flex-1 text-center text-[13px] text-white/70 md:block">
-          You don&rsquo;t have to do this alone.
-        </p>
+        <button
+          type="button"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((v) => !v)}
+          className="text-white md:hidden"
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
 
-        <div className="relative ml-auto flex items-center gap-3">
-          <nav className="hidden items-center gap-1 md:flex">
-            <Link
-              href="/"
-              className={`text-[13px] font-medium text-white transition-colors ${
-                pathname === "/"
-                  ? "rounded-full bg-white/12 px-3 py-1.5 opacity-100"
-                  : "px-3 py-1.5 opacity-70 hover:opacity-100"
-              }`}
-            >
-              Find a meeting
-            </Link>
-            <LearnDropdown active={learnActive} />
-          </nav>
+        <nav className="hidden flex-1 items-center justify-center gap-12 md:flex">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-[12px] font-medium uppercase tracking-[0.04em] text-white transition-opacity ${
+                  active
+                    ? "underline decoration-2 underline-offset-[2px] opacity-100"
+                    : "opacity-75 hover:opacity-100"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
 
+        <div className="ml-auto flex items-center gap-3">
           <a
             href="tel:+911414000000"
-            className="flex items-center gap-1.5 rounded-lg bg-terracotta px-3 py-1.5 text-[13px] font-semibold text-white"
+            className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-terracotta px-3 py-2 text-[13px] font-semibold text-white sm:px-4"
           >
             <Phone size={14} />
-            +91 141 400 0000
+            <span className="hidden sm:inline">+91 141 400 0000</span>
           </a>
-
-          <button
-            type="button"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen((v) => !v)}
-            className="text-white md:hidden"
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-
-          <button type="button" className="text-[13px] text-white">
-            EN | HI
-          </button>
+          <LanguageToggle />
         </div>
-      </div>
+      </Container>
 
       {mobileOpen && (
         <nav className="w-full bg-indigo md:hidden">
-          <Link
-            href="/"
-            onClick={() => setMobileOpen(false)}
-            className={`block px-4 py-4 text-sm font-medium text-white ${
-              pathname === "/" ? "bg-white/12" : "opacity-70"
-            }`}
-          >
-            Find a meeting
-          </Link>
-          <div className="px-4 pt-3 pb-1 text-xs font-medium uppercase tracking-wide text-white/50">
-            Learn
-          </div>
-          {LEARN_LINKS.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className={`block px-4 py-4 text-sm font-medium text-white ${
+              className={`block px-8 py-4 text-sm font-medium text-white ${
                 pathname === link.href ? "bg-white/12" : "opacity-70"
               }`}
             >
