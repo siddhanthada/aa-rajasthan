@@ -42,12 +42,16 @@ export default function EntryTiles() {
   ];
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
       {tiles.map((tile, index) => (
         <Link
           key={tile.href}
           href={tile.href}
-          className={`group flex items-center gap-3 rounded-xl border border-border bg-white p-4 animate-fade-rise ${tileHover} ${
+          className={`group flex rounded-xl border border-border bg-white p-4 animate-fade-rise ${tileHover} ${
+            tile.accent === undefined
+              ? "col-span-2 items-center gap-3 sm:col-span-1"
+              : "flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3"
+          } ${
             tile.accent === "indigo"
               ? "border-l-[3px] border-l-indigo hover:border-indigo"
               : tile.accent === "terracotta"
@@ -78,14 +82,18 @@ export default function EntryTiles() {
             >
               {tile.title}
             </span>
-            <span className="block truncate text-xs text-ink-muted">
+            <span
+              className={`truncate text-xs text-ink-muted ${
+                tile.accent ? "hidden sm:block" : "block"
+              }`}
+            >
               {tile.description}
             </span>
           </span>
           {tile.accent && (
             <ChevronRight
               size={18}
-              className="ml-auto shrink-0 text-ink-muted"
+              className="hidden shrink-0 text-ink-muted sm:ml-auto sm:block"
             />
           )}
         </Link>
