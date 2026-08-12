@@ -79,6 +79,7 @@ export default function MeetingOverlay({
     // scroll position is restored on close.
     const scrollY = window.scrollY;
     const body = document.body;
+    const html = document.documentElement;
     const previousStyle = {
       position: body.style.position,
       top: body.style.top,
@@ -86,11 +87,17 @@ export default function MeetingOverlay({
       right: body.style.right,
       width: body.style.width,
     };
+    const previousOverscrollBehavior = html.style.overscrollBehaviorY;
     body.style.position = "fixed";
     body.style.top = `-${scrollY}px`;
     body.style.left = "0";
     body.style.right = "0";
     body.style.width = "100%";
+    // Chrome/Android's pull-to-refresh gesture is driven by the
+    // document's own overscroll, independent of body's scroll lock —
+    // without this, dragging the sheet down can trigger the browser's
+    // native refresh spinner instead of (or alongside) our own drag.
+    html.style.overscrollBehaviorY = "none";
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
@@ -99,6 +106,7 @@ export default function MeetingOverlay({
       body.style.left = previousStyle.left;
       body.style.right = previousStyle.right;
       body.style.width = previousStyle.width;
+      html.style.overscrollBehaviorY = previousOverscrollBehavior;
       window.scrollTo(0, scrollY);
     };
   }, [meeting, onClose]);
