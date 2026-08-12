@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   AnimatePresence,
   motion,
@@ -44,6 +44,7 @@ export default function MeetingOverlay({
 }) {
   const t = useTranslations("meetingDetail");
   const dragControls = useDragControls();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   function handleSheetDragEnd(
     _event: PointerEvent | MouseEvent | TouchEvent,
@@ -52,6 +53,15 @@ export default function MeetingOverlay({
     if (info.offset.y > 100 || info.velocity.y > 500) {
       onClose();
     }
+  }
+
+  // Let a swipe start anywhere on the sheet, not just the small grab
+  // handle — but only take over from the content's own scroll once
+  // it's already scrolled to the top, so a long meeting detail can
+  // still be scrolled normally.
+  function handleContentPointerDown(e: React.PointerEvent) {
+    if (contentRef.current && contentRef.current.scrollTop > 0) return;
+    dragControls.start(e);
   }
 
   useEffect(() => {
@@ -120,28 +130,31 @@ export default function MeetingOverlay({
             dragElastic={{ top: 0, bottom: 0.5 }}
             onDragEnd={handleSheetDragEnd}
           >
-            <div className="flex shrink-0 flex-col items-center pt-3">
+            <div
+              className="flex shrink-0 touch-none flex-col items-center pt-3"
+              onPointerDown={(e) => dragControls.start(e)}
+            >
               <div
-                className="cursor-grab touch-none px-8 py-1.5 active:cursor-grabbing"
-                onPointerDown={(e) => dragControls.start(e)}
-              >
-                <div
-                  className="h-1 w-10 rounded-full bg-border"
-                  aria-hidden="true"
-                />
-              </div>
+                className="h-1 w-10 rounded-full bg-border"
+                aria-hidden="true"
+              />
               <div className="flex w-full items-center justify-end px-4 pt-1">
                 <button
                   type="button"
                   aria-label={t("close")}
                   onClick={onClose}
+                  onPointerDown={(e) => e.stopPropagation()}
                   className={`rounded text-ink-muted ${pressable}`}
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto px-6 pb-8">
+            <div
+              ref={contentRef}
+              onPointerDown={handleContentPointerDown}
+              className="flex-1 overflow-y-auto px-6 pb-8"
+            >
               <MeetingDetailContent meeting={meeting} staggerEntrance />
             </div>
           </motion.div>
