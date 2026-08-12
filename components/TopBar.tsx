@@ -42,7 +42,7 @@ export default function TopBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="relative shrink-0 bg-indigo">
+    <div className="sticky top-0 z-40 shrink-0 bg-indigo">
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
         aria-hidden="true"

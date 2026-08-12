@@ -34,9 +34,9 @@ function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
   }
 
   return (
-    <div className="rounded-xl border border-indigo bg-indigo/6 p-5">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo">
-        <HeartHandshake size={18} className="text-white" />
+    <div className="rounded-xl border-2 border-terracotta bg-terracotta/8 p-5">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta/15">
+        <HeartHandshake size={18} className="text-terracotta" />
       </div>
       <p className="mt-3 text-sm leading-relaxed text-ink">
         It sounds like some of this might be familiar. Many people who feel
