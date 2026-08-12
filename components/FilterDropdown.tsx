@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, type LucideIcon } from "lucide-react";
+import { Check, ChevronDown, type LucideIcon } from "lucide-react";
 import { hoverTransition, pressable } from "@/lib/motion";
 
 export type DropdownOption = { value: string; label: string };
@@ -58,21 +58,27 @@ export default function FilterDropdown({
           role="listbox"
           className="absolute left-0 top-full z-20 mt-1 min-w-full overflow-hidden rounded-lg border border-border bg-white py-1 shadow-none"
         >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="option"
-              aria-selected={option.value === value}
-              onClick={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
-              className={`block w-full whitespace-nowrap px-2 py-2 text-left text-sm text-ink hover:bg-paper ${hoverTransition}`}
-            >
-              {option.label}
-            </button>
-          ))}
+          {options.map((option) => {
+            const selected = option.value === value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center justify-between gap-2 whitespace-nowrap px-2 py-2 text-left text-sm hover:bg-paper ${hoverTransition} ${
+                  selected ? "bg-indigo/8 font-medium text-indigo" : "text-ink"
+                }`}
+              >
+                {option.label}
+                {selected && <Check size={14} className="shrink-0" />}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
