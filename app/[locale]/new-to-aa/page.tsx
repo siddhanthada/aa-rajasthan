@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import BackLink from "@/components/BackLink";
 
 export default async function NewToAA({
   params,
@@ -8,6 +9,7 @@ export default async function NewToAA({
   setRequestLocale(locale);
 
   const t = await getTranslations("newToAA");
+  const tCommon = await getTranslations("common");
 
   const FAQ = [
     { question: t("faq.q1"), answer: t("faq.a1") },
@@ -19,7 +21,10 @@ export default async function NewToAA({
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-[680px] px-4 py-8 sm:px-6">
-        <h1 className="text-[22px] font-semibold text-ink">{t("heading")}</h1>
+        <BackLink label={tCommon("back")} />
+        <h1 className="mt-4 text-[22px] font-semibold text-ink">
+          {t("heading")}
+        </h1>
 
         <div className="mt-8 flex flex-col gap-8">
           <section>

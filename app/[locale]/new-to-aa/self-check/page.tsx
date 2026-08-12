@@ -6,6 +6,7 @@ import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { Info, HeartHandshake } from "lucide-react";
 import Container from "@/components/Container";
+import BackLink from "@/components/BackLink";
 import { pressable } from "@/lib/motion";
 
 type Answer = "yes" | "no";
@@ -121,6 +122,7 @@ function ReflectionPanel({
 
 export default function SelfCheck() {
   const t = useTranslations("selfCheck");
+  const tCommon = useTranslations("common");
   const [answers, setAnswers] = useState<Record<number, Answer>>({});
 
   const QUESTIONS = [
@@ -145,7 +147,8 @@ export default function SelfCheck() {
     <main className="flex-1">
       <Container className="py-8">
         <div className="mx-auto max-w-[1040px]">
-          <h1 className="text-[22px] font-semibold text-ink">
+          <BackLink label={tCommon("back")} />
+          <h1 className="mt-4 text-[22px] font-semibold text-ink">
             {t("heading")}
           </h1>
           <p className="mt-2 max-w-[680px] text-sm leading-relaxed text-ink-muted">

@@ -1,4 +1,7 @@
 {
+  "common": {
+    "back": "Back"
+  },
   "nav": {
     "findAMeeting": "Find a meeting",
     "aboutAA": "About AA",

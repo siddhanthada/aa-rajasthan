@@ -47,7 +47,7 @@ export default function EntryTiles() {
         <Link
           key={tile.href}
           href={tile.href}
-          className={`group flex rounded-xl border border-border bg-white p-4 animate-fade-rise ${tileHover} ${
+          className={`group relative flex rounded-xl border border-border bg-white p-4 animate-fade-rise ${tileHover} ${
             tile.accent === undefined
               ? "col-span-2 items-center gap-3 sm:col-span-1"
               : "flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3"
@@ -91,10 +91,16 @@ export default function EntryTiles() {
             </span>
           </span>
           {tile.accent && (
-            <ChevronRight
-              size={18}
-              className="hidden shrink-0 text-ink-muted sm:ml-auto sm:block"
-            />
+            <>
+              <ChevronRight
+                size={16}
+                className="absolute right-4 top-4 shrink-0 text-ink-muted sm:hidden"
+              />
+              <ChevronRight
+                size={18}
+                className="hidden shrink-0 text-ink-muted sm:ml-auto sm:block"
+              />
+            </>
           )}
         </Link>
       ))}

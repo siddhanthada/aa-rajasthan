@@ -1,5 +1,8 @@
 {
   "_comment": "AI-translated — recommend native-speaker review before wide release",
+  "common": {
+    "back": "वापस"
+  },
   "nav": {
     "findAMeeting": "मीटिंग खोजें",
     "aboutAA": "AA के बारे में",
