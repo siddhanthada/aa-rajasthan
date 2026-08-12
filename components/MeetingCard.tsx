@@ -1,4 +1,7 @@
-import Link from "next/link";
+"use client";
+
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Clock,
   MapPin,
@@ -8,35 +11,40 @@ import {
   Navigation,
 } from "lucide-react";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
-import {
-  formatDays,
-  formatFormat,
-  formatLanguage,
-  formatTimeRange,
-  formatDate,
-} from "@/lib/format";
+import { formatDays, formatFormat, formatLanguage, formatTimeRange, formatDate } from "@/lib/format";
 import { formatDistanceKm } from "@/lib/geo";
+
+type Translate = (key: string) => string;
 
 export function verificationLabel(
   meeting: MeetingWithDetails,
+  t: Translate,
   compact: boolean = false,
 ): string {
   if (meeting.verificationStatus === "verified" && meeting.lastVerifiedAt) {
-    return compact
-      ? formatDate(meeting.lastVerifiedAt)
-      : `Verified ${formatDate(meeting.lastVerifiedAt)}`;
+    const date = formatDate(meeting.lastVerifiedAt);
+    return compact ? date : `${t("verified")} ${date}`;
   }
   if (meeting.verificationStatus === "needs_review") {
-    return "Needs review";
+    return t("needsReview");
   }
-  return "Unverified";
+  return t("unverified");
 }
 
-export function tagsSummary(meeting: MeetingWithDetails): string {
+export function tagsSummary(meeting: MeetingWithDetails, t: Translate): string {
+  const formatLabels: Record<string, string> = {
+    in_person: t("inPerson"),
+    online: t("online"),
+    hybrid: t("hybrid"),
+  };
+  const languageLabels: Record<string, string> = {
+    hi: t("languageHindi"),
+    en: t("languageEnglish"),
+  };
   const parts = [
-    meeting.access === "open" ? "Open" : "Closed",
-    formatFormat(meeting.format),
-    ...meeting.languages.map(formatLanguage),
+    meeting.access === "open" ? t("open") : t("closed"),
+    formatFormat(meeting.format, formatLabels),
+    ...meeting.languages.map((lang) => formatLanguage(lang, languageLabels)),
   ];
   return parts.join(", ");
 }
@@ -48,6 +56,16 @@ export function MeetingTags({
   meeting: MeetingWithDetails;
   compact?: boolean;
 }) {
+  const t = useTranslations("badges");
+  const formatLabels: Record<string, string> = {
+    in_person: t("inPerson"),
+    online: t("online"),
+    hybrid: t("hybrid"),
+  };
+  const languageLabels: Record<string, string> = {
+    hi: t("languageHindi"),
+    en: t("languageEnglish"),
+  };
   const size = compact ? "px-2 py-0.5 text-[11px]" : "px-2 py-0.5 text-xs";
   return (
     <div className="flex flex-wrap items-center gap-1.5">
@@ -56,17 +74,17 @@ export function MeetingTags({
           meeting.access === "open" ? "bg-terracotta" : "bg-ink-muted"
         }`}
       >
-        {meeting.access === "open" ? "Open" : "Closed"}
+        {meeting.access === "open" ? t("open") : t("closed")}
       </span>
       <span className={`shrink-0 rounded-lg bg-indigo/15 font-medium text-indigo ${size}`}>
-        {formatFormat(meeting.format)}
+        {formatFormat(meeting.format, formatLabels)}
       </span>
       {meeting.languages.map((lang) => (
         <span
           key={lang}
           className={`shrink-0 rounded-lg bg-sandstone/15 font-medium text-sandstone ${size}`}
         >
-          {formatLanguage(lang)}
+          {formatLanguage(lang, languageLabels)}
         </span>
       ))}
     </div>
@@ -80,6 +98,7 @@ export function VerificationStatus({
   meeting: MeetingWithDetails;
   compact?: boolean;
 }) {
+  const t = useTranslations("badges");
   const verified = meeting.verificationStatus === "verified";
   return (
     <span
@@ -88,7 +107,7 @@ export function VerificationStatus({
       }`}
     >
       {verified ? <Check size={14} /> : <AlertTriangle size={14} />}
-      {verificationLabel(meeting, compact)}
+      {verificationLabel(meeting, t, compact)}
     </span>
   );
 }
@@ -108,11 +127,15 @@ export default function MeetingCard({
   distanceKm?: number;
   onSelect?: (id: string) => void;
 }) {
+  const t = useTranslations("card");
+  const tDays = useTranslations("days");
+  const dayLabels = tDays.raw("short") as string[];
+
   const venueLine =
     meeting.format === "online"
-      ? `Online${meeting.districtName ? ` · ${meeting.districtName}` : ""}`
+      ? `${t("online")}${meeting.districtName ? ` · ${meeting.districtName}` : ""}`
       : `${meeting.venueName}, ${meeting.venueLocality}${
-          meeting.format === "hybrid" ? " · also online" : ""
+          meeting.format === "hybrid" ? ` · ${t("alsoOnline")}` : ""
         } · ${meeting.districtName}`;
 
   return (
@@ -128,7 +151,7 @@ export default function MeetingCard({
       >
         {isToday && (
           <span className="absolute right-4 top-4 rounded-full bg-indigo px-2.5 py-1 text-xs font-medium text-white">
-            Today
+            {t("today")}
           </span>
         )}
 
@@ -138,7 +161,7 @@ export default function MeetingCard({
 
         <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-ink">
           <Clock size={16} className="shrink-0 text-ink" />
-          {formatDays(meeting.daysOfWeek)} ·{" "}
+          {formatDays(meeting.daysOfWeek, dayLabels)} ·{" "}
           {formatTimeRange(meeting.startTime, meeting.endTime)}
         </p>
         <p className="mt-1 flex items-start gap-1.5 text-[13px] text-ink-muted">
@@ -146,7 +169,7 @@ export default function MeetingCard({
           <span className="line-clamp-2">
             {venueLine}
             {distanceKm !== undefined && Number.isFinite(distanceKm) && (
-              <> · {formatDistanceKm(distanceKm)}</>
+              <> · {formatDistanceKm(distanceKm, t("kmAway"))}</>
             )}
           </span>
           {meeting.mapLink && (
@@ -157,7 +180,9 @@ export default function MeetingCard({
                 e.stopPropagation();
                 window.open(meeting.mapLink, "_blank", "noopener,noreferrer");
               }}
-              aria-label={`Get directions to ${meeting.venueName ?? "venue"}`}
+              aria-label={t("getDirectionsAria", {
+                venue: meeting.venueName ?? "",
+              })}
               className="shrink-0 text-indigo"
             >
               <Navigation size={16} />

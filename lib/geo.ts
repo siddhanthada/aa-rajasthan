@@ -21,6 +21,6 @@ export function haversineDistanceKm(
   return EARTH_RADIUS_KM * c;
 }
 
-export function formatDistanceKm(km: number): string {
-  return `${km.toFixed(1)} km away`;
+export function formatDistanceKm(km: number, label: string): string {
+  return `${km.toFixed(1)} ${label}`;
 }

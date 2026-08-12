@@ -1,10 +1,14 @@
+import { setRequestLocale } from "next-intl/server";
 import { getDistricts } from "@/lib/data/districts";
 import { getMeetingsWithDetails } from "@/lib/data/meetings";
 import Finder from "@/components/Finder";
 import EntryTiles from "@/components/EntryTiles";
 import Container from "@/components/Container";
 
-export default function Home() {
+export default async function Home({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const districts = getDistricts();
   const meetings = getMeetingsWithDetails();
   const today = new Date().getDay();

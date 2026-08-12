@@ -1,34 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { Menu, X, Phone } from "lucide-react";
 import Container from "./Container";
 
-const NAV_LINKS = [
-  { href: "/", label: "Find a meeting" },
-  { href: "/about-aa", label: "About AA" },
-];
-
 function LanguageToggle() {
-  const [lang, setLang] = useState<"en" | "hi">("en");
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  function switchTo(nextLocale: "en" | "hi") {
+    router.replace(pathname, { locale: nextLocale });
+  }
+
   return (
     <div className="flex items-center rounded-full bg-white/10 p-0.5">
       <button
         type="button"
-        onClick={() => setLang("en")}
+        onClick={() => switchTo("en")}
         className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-          lang === "en" ? "text-white" : "text-white/60"
+          locale === "en" ? "text-white" : "text-white/60"
         }`}
       >
         EN
       </button>
       <button
         type="button"
-        onClick={() => setLang("hi")}
+        onClick={() => switchTo("hi")}
         className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-          lang === "hi" ? "text-white" : "text-white/60"
+          locale === "hi" ? "text-white" : "text-white/60"
         }`}
       >
         HI
@@ -38,8 +40,14 @@ function LanguageToggle() {
 }
 
 export default function TopBar() {
+  const t = useTranslations("nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navLinks = [
+    { href: "/", label: t("findAMeeting") },
+    { href: "/about-aa", label: t("aboutAA") },
+  ];
 
   return (
     <div className="sticky top-0 z-40 shrink-0 bg-indigo">
@@ -83,7 +91,7 @@ export default function TopBar() {
 
         <button
           type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
           className="text-white md:hidden"
@@ -92,7 +100,7 @@ export default function TopBar() {
         </button>
 
         <nav className="hidden flex-1 items-center justify-center gap-12 md:flex">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
@@ -113,6 +121,7 @@ export default function TopBar() {
         <div className="ml-auto flex items-center gap-3">
           <a
             href="tel:+911414000000"
+            aria-label={t("helpline")}
             className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-terracotta px-3 py-2 text-[13px] font-semibold text-white sm:px-4"
           >
             <Phone size={14} />
@@ -124,7 +133,7 @@ export default function TopBar() {
 
       {mobileOpen && (
         <nav className="w-full bg-indigo md:hidden">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}

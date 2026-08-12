@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Info,
   HeartHandshake,
@@ -7,38 +8,40 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-const TILES: {
-  href: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  quiet?: boolean;
-}[] = [
-  {
-    href: "/new-to-aa",
-    title: "New to AA",
-    description: "What to expect at your first meeting",
-    icon: Info,
-  },
-  {
-    href: "/concerned-about-someone",
-    title: "Concerned about someone",
-    description: "If someone you care about drinks",
-    icon: HeartHandshake,
-  },
-  {
-    href: "/new-to-aa/self-check",
-    title: "Not sure?",
-    description: "A few quiet questions, no pressure",
-    icon: ListChecks,
-    quiet: true,
-  },
-];
-
 export default function EntryTiles() {
+  const t = useTranslations("homepage");
+
+  const tiles: {
+    href: string;
+    title: string;
+    description: string;
+    icon: LucideIcon;
+    quiet?: boolean;
+  }[] = [
+    {
+      href: "/new-to-aa",
+      title: t("newToAA.title"),
+      description: t("newToAA.desc"),
+      icon: Info,
+    },
+    {
+      href: "/concerned-about-someone",
+      title: t("concerned.title"),
+      description: t("concerned.desc"),
+      icon: HeartHandshake,
+    },
+    {
+      href: "/new-to-aa/self-check",
+      title: t("notSure.title"),
+      description: t("notSure.desc"),
+      icon: ListChecks,
+      quiet: true,
+    },
+  ];
+
   return (
     <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-      {TILES.map((tile) => (
+      {tiles.map((tile) => (
         <Link
           key={tile.href}
           href={tile.href}

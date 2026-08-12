@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 
-const REASON_OPTIONS: DropdownOption[] = [
-  { value: "", label: "Select a reason" },
-  { value: "meeting_didnt_happen", label: "Meeting didn't happen" },
-  { value: "time_wrong", label: "Time is wrong" },
-  { value: "venue_changed", label: "Venue changed" },
-  { value: "map_wrong", label: "Map location wrong" },
-  { value: "other", label: "Other" },
-];
-
 export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
+  const t = useTranslations("meetingDetail");
+  const tReport = useTranslations("meetingDetail.report");
+
+  const REASON_OPTIONS: DropdownOption[] = [
+    { value: "", label: tReport("selectReason") },
+    { value: "meeting_didnt_happen", label: tReport("reasonMeetingDidntHappen") },
+    { value: "time_wrong", label: tReport("reasonTimeWrong") },
+    { value: "venue_changed", label: tReport("reasonVenueChanged") },
+    { value: "map_wrong", label: tReport("reasonMapWrong") },
+    { value: "other", label: tReport("reasonOther") },
+  ];
+
   const [expanded, setExpanded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [reason, setReason] = useState("");
@@ -40,7 +44,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
         onClick={() => setExpanded(true)}
         className="text-sm font-medium text-indigo underline underline-offset-2"
       >
-        Report an issue with this meeting
+        {t("reportIssue")}
       </button>
     );
   }
@@ -48,7 +52,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
   if (submitted) {
     return (
       <p className="text-sm font-medium text-sandstone">
-        Thanks — this has been noted.
+        {tReport("thanks")}
       </p>
     );
   }
@@ -56,7 +60,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
   return (
     <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-3">
       <FilterDropdown
-        ariaLabel="Reason"
+        ariaLabel={tReport("reasonAria")}
         value={reason}
         options={REASON_OPTIONS}
         onChange={setReason}
@@ -64,7 +68,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
       <textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Optional note"
+        placeholder={tReport("notePlaceholder")}
         rows={3}
         className="rounded-lg border border-border bg-white p-3 text-sm text-ink placeholder:text-ink-muted"
       />
@@ -73,7 +77,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
         disabled={!reason}
         className="w-fit rounded-lg bg-indigo px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
       >
-        Submit
+        {tReport("submit")}
       </button>
     </form>
   );

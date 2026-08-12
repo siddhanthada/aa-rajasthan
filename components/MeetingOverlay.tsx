@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
 import MeetingDetailContent from "./MeetingDetailContent";
@@ -12,6 +13,7 @@ export default function MeetingOverlay({
   meeting: MeetingWithDetails | null;
   onClose: () => void;
 }) {
+  const t = useTranslations("meetingDetail");
   useEffect(() => {
     if (!meeting) return;
 
@@ -42,7 +44,7 @@ export default function MeetingOverlay({
         <div className="flex shrink-0 items-center justify-end px-4 py-3">
           <button
             type="button"
-            aria-label="Close"
+            aria-label={t("close")}
             onClick={onClose}
             className="text-ink-muted"
           >
@@ -61,7 +63,7 @@ export default function MeetingOverlay({
           <div className="flex w-full items-center justify-end px-4 pt-2">
             <button
               type="button"
-              aria-label="Close"
+              aria-label={t("close")}
               onClick={onClose}
               className="text-ink-muted"
             >

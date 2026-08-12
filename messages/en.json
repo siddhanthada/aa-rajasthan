@@ -1,0 +1,176 @@
+{
+  "nav": {
+    "findAMeeting": "Find a meeting",
+    "aboutAA": "About AA",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "helpline": "Helpline"
+  },
+  "homepage": {
+    "newToAA": {
+      "title": "New to AA",
+      "desc": "What to expect at your first meeting"
+    },
+    "concerned": {
+      "title": "Concerned about someone",
+      "desc": "If someone you care about drinks"
+    },
+    "notSure": {
+      "title": "Not sure?",
+      "desc": "A few quiet questions, no pressure"
+    }
+  },
+  "filters": {
+    "allDistricts": "All districts",
+    "today": "Today",
+    "nearMe": "Near me",
+    "locating": "Locating…",
+    "allDays": "All days",
+    "allLanguages": "All languages",
+    "allFormats": "All formats",
+    "dayAria": "Day",
+    "languageAria": "Language",
+    "formatAria": "Format",
+    "meetingsFound": "{count, plural, one {# meeting found} other {# meetings found}}",
+    "cards": "Cards",
+    "table": "Table",
+    "filtersLabel": "Filters",
+    "closeFilters": "Close filters",
+    "apply": "Apply",
+    "clearFilters": "Clear filters",
+    "geoError": "Couldn't get your location — showing all meetings instead."
+  },
+  "badges": {
+    "open": "Open",
+    "closed": "Closed",
+    "inPerson": "In person",
+    "online": "Online",
+    "hybrid": "Hybrid",
+    "languageHindi": "Hindi",
+    "languageEnglish": "English",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "needsReview": "Needs review"
+  },
+  "card": {
+    "today": "Today",
+    "online": "Online",
+    "alsoOnline": "also online",
+    "getDirectionsAria": "Get directions to {venue}",
+    "kmAway": "km away"
+  },
+  "table": {
+    "columnGroup": "Group",
+    "columnDayTime": "Day & time",
+    "columnVenue": "Venue",
+    "columnTags": "Tags",
+    "columnVerified": "Verified"
+  },
+  "meetingDetail": {
+    "backToMeetings": "Back to meetings",
+    "getDirections": "Get directions",
+    "onlineMeeting": "Online meeting",
+    "alsoOnline": "also online",
+    "close": "Close",
+    "firstTime": {
+      "heading": "Going for the first time?",
+      "line1": "You don't need to register.",
+      "line2": "You don't need to introduce yourself if you don't want to.",
+      "line3": "There is no fee to attend."
+    },
+    "reportIssue": "Report an issue with this meeting",
+    "report": {
+      "reasonAria": "Reason",
+      "selectReason": "Select a reason",
+      "reasonMeetingDidntHappen": "Meeting didn't happen",
+      "reasonTimeWrong": "Time is wrong",
+      "reasonVenueChanged": "Venue changed",
+      "reasonMapWrong": "Map location wrong",
+      "reasonOther": "Other",
+      "notePlaceholder": "Optional note",
+      "submit": "Submit",
+      "thanks": "Thanks — this has been noted."
+    }
+  },
+  "newToAA": {
+    "heading": "New to AA",
+    "whatIsAA": {
+      "heading": "What is AA?",
+      "body": "Alcoholics Anonymous is a fellowship of people who share their experience with each other to solve a common problem and help others recover from alcoholism. There are no dues or fees. The only requirement for membership is a desire to stop drinking."
+    },
+    "whatHappens": {
+      "heading": "What happens at a meeting?",
+      "body": "Meetings usually run about an hour. People share their own experiences — no one will call on you or ask you to speak. Some meetings are open to anyone; others are for people who have a drinking problem or think they might have one."
+    },
+    "commonQuestions": "Common questions",
+    "faq": {
+      "q1": "Do I have to talk?",
+      "a1": "No. You're welcome to just listen.",
+      "q2": "Will anyone know I came?",
+      "a2": "AA doesn't keep attendance records or membership lists. What's said and who attends stays in the room.",
+      "q3": "Is there a cost?",
+      "a3": "No. AA has no dues or fees; it's self-supporting through voluntary contributions from members.",
+      "q4": "What's the difference between open and closed meetings?",
+      "a4": "Open meetings welcome anyone, including family or friends. Closed meetings are for those with a drinking problem, or who think they might have one."
+    },
+    "selfCheckPrompt": "A short <link>self-check</link> can help you think this through — it isn't a diagnosis, and you don't need to take it before going to a meeting.",
+    "findAMeeting": "Find a meeting"
+  },
+  "concernedAboutSomeone": {
+    "heading": "Concerned about someone",
+    "intro": "If someone you care about has a drinking problem, you're not alone, and it isn't yours to fix by yourself.",
+    "whatYouCanDo": {
+      "heading": "What you can do",
+      "body": "You can't make someone stop drinking. You can share that meetings exist, without pressuring them to go. Many people find it helps to talk to others who understand — Al-Anon is a separate fellowship specifically for the families and friends of people with drinking problems, if you'd like support of your own."
+    },
+    "whereToStart": {
+      "heading": "If you're not sure where to start",
+      "body": "You're welcome to call the helpline below and talk it through with someone."
+    },
+    "findAMeeting": "Find a meeting"
+  },
+  "aboutAA": {
+    "heading": "About AA",
+    "howAAWorks": {
+      "heading": "How AA works",
+      "body": "AA has no leaders, no dues, and isn't affiliated with any religion, political group, or institution. Members follow the Twelve Steps, a set of principles for recovery, and the Twelve Traditions, which describe how AA groups stay unified and self-supporting."
+    },
+    "rajasthanSection": {
+      "heading": "AA in Rajasthan",
+      "placeholder": "This section is reserved for AA Rajasthan's own history, to be added by local intergroup volunteers."
+    }
+  },
+  "selfCheck": {
+    "heading": "A few questions to think about",
+    "intro": "There's no score and no right answer. This isn't a diagnosis — only you can decide what it means for you.",
+    "q1": "Have you tried to cut back on drinking and found it harder than expected?",
+    "q2": "Has anyone close to you said they're worried about how much you drink?",
+    "q3": "Have you felt guilty or uneasy about your drinking?",
+    "q4": "Do you ever need a drink to feel normal or steady in the morning?",
+    "q5": "Has drinking gotten in the way of work, family, or things you care about?",
+    "q6": "Do you drink alone, or hide how much you drink?",
+    "q7": "Have you kept drinking even when it was clearly causing problems?",
+    "q8": "Has drinking ever put you or someone else in a risky situation?",
+    "yes": "Yes",
+    "no": "No",
+    "panel": {
+      "default": "Answer honestly, at your own pace — nothing here is scored or judged.",
+      "resonates": "It sounds like some of this might be familiar. Many people who feel this way find it helps to talk to someone or sit in on a meeting — there's no pressure, and no one will ask why you came."
+    },
+    "findAMeeting": "Find a meeting",
+    "callHelpline": "Call the helpline"
+  },
+  "footer": {
+    "tagline": "AA Rajasthan — a community-maintained meeting directory",
+    "helpline": "Helpline: {number}",
+    "privacy": "No account needed. We don't track who searches here."
+  },
+  "emptyState": {
+    "message": "No meetings match these filters yet.",
+    "helplineCallout": "Need to talk to someone now? Call {number}"
+  },
+  "days": {
+    "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "full": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  }
+}

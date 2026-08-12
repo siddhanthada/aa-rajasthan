@@ -1,18 +1,23 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { getMeetingWithDetailsById } from "@/lib/data/meetings";
 import MeetingDetailContent from "@/components/MeetingDetailContent";
 
 export default async function MeetingDetail(
-  props: PageProps<"/meetings/[id]">,
+  props: PageProps<"/[locale]/meetings/[id]">,
 ) {
-  const { id } = await props.params;
+  const { locale, id } = await props.params;
+  setRequestLocale(locale);
+
   const meeting = getMeetingWithDetailsById(id);
 
   if (!meeting) {
     notFound();
   }
+
+  const t = await getTranslations("meetingDetail");
 
   return (
     <main className="flex-1">
@@ -22,7 +27,7 @@ export default async function MeetingDetail(
           className="inline-flex items-center gap-1.5 text-sm text-indigo"
         >
           <ArrowLeft size={14} />
-          Back to meetings
+          {t("backToMeetings")}
         </Link>
 
         <div className="mt-4">

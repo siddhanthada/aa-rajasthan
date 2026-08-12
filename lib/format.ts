@@ -1,27 +1,11 @@
-const DAY_NAMES = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-const DAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-export function dayName(day: number): string {
-  return DAY_NAMES[day] ?? "";
+export function dayShort(day: number, labels: string[]): string {
+  return labels[day] ?? "";
 }
 
-export function dayShort(day: number): string {
-  return DAY_SHORT[day] ?? "";
-}
-
-export function formatDays(days: number[]): string {
+export function formatDays(days: number[], labels: string[]): string {
   return [...days]
     .sort((a, b) => a - b)
-    .map(dayShort)
+    .map((d) => dayShort(d, labels))
     .join(", ");
 }
 
@@ -61,8 +45,13 @@ export function formatTimeRangeCompact(start: string, end?: string): string {
   return `${startStr} ${s.period}–${endStr} ${e.period}`;
 }
 
-export function formatDayTimeCompact(days: number[], start: string, end?: string): string {
-  return `${formatDays(days)} · ${formatTimeRangeCompact(start, end)}`;
+export function formatDayTimeCompact(
+  days: number[],
+  start: string,
+  end: string | undefined,
+  labels: string[],
+): string {
+  return `${formatDays(days, labels)} · ${formatTimeRangeCompact(start, end)}`;
 }
 
 export function formatDate(isoDate: string): string {
@@ -74,21 +63,16 @@ export function formatDate(isoDate: string): string {
   });
 }
 
-const FORMAT_LABELS: Record<string, string> = {
-  in_person: "In person",
-  online: "Online",
-  hybrid: "Hybrid",
-};
-
-export function formatFormat(format: string): string {
-  return FORMAT_LABELS[format] ?? format;
+export function formatFormat(
+  format: string,
+  labels: Record<string, string>,
+): string {
+  return labels[format] ?? format;
 }
 
-const LANGUAGE_LABELS: Record<string, string> = {
-  hi: "Hindi",
-  en: "English",
-};
-
-export function formatLanguage(language: string): string {
-  return LANGUAGE_LABELS[language] ?? language;
+export function formatLanguage(
+  language: string,
+  labels: Record<string, string>,
+): string {
+  return labels[language] ?? language;
 }

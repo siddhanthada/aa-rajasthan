@@ -1,16 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Clock, Navigation } from "lucide-react";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
 import { formatDayTimeCompact } from "@/lib/format";
 import { formatDistanceKm } from "@/lib/geo";
 import { MeetingTags, VerificationStatus, verificationLabel, tagsSummary } from "./MeetingCard";
-
-const GRID_COLUMNS =
-  "minmax(220px, 260px) minmax(240px, 280px) minmax(260px, 1.4fr) minmax(220px, 260px) minmax(130px, 150px)";
-
-const COLUMNS = ["Group", "Day & time", "Venue", "Tags", "Verified"];
 
 function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
@@ -27,6 +23,23 @@ export default function MeetingTable({
   distances?: Record<string, number>;
   onSelect: (id: string) => void;
 }) {
+  const t = useTranslations("table");
+  const tCard = useTranslations("card");
+  const tBadges = useTranslations("badges");
+  const tDays = useTranslations("days");
+  const dayLabels = tDays.raw("short") as string[];
+
+  const GRID_COLUMNS =
+    "minmax(220px, 260px) minmax(240px, 280px) minmax(260px, 1.4fr) minmax(220px, 260px) minmax(130px, 150px)";
+
+  const COLUMNS = [
+    t("columnGroup"),
+    t("columnDayTime"),
+    t("columnVenue"),
+    t("columnTags"),
+    t("columnVerified"),
+  ];
+
   return (
     <div className="rounded-xl border border-border bg-white">
       <div role="table">
@@ -52,18 +65,19 @@ export default function MeetingTable({
               m.daysOfWeek,
               m.startTime,
               m.endTime,
+              dayLabels,
             );
             const distanceKm = distances?.[m.id];
             const venueLine =
               m.format === "online"
-                ? `Online · ${m.districtName}`
+                ? `${tCard("online")} · ${m.districtName}`
                 : `${m.venueName}, ${m.venueLocality}${
-                    m.format === "hybrid" ? " · also online" : ""
+                    m.format === "hybrid" ? ` · ${tCard("alsoOnline")}` : ""
                   } · ${m.districtName}`;
             const venueTitle =
               venueLine +
               (distanceKm !== undefined && Number.isFinite(distanceKm)
-                ? ` · ${formatDistanceKm(distanceKm)}`
+                ? ` · ${formatDistanceKm(distanceKm, tCard("kmAway"))}`
                 : "");
 
             return (
@@ -94,7 +108,7 @@ export default function MeetingTable({
                     {m.groupName}
                     {isToday && (
                       <span className="ml-1.5 inline-flex items-center rounded-full bg-indigo px-2 py-0.5 align-middle text-[10px] font-medium text-white">
-                        Today
+                        {tCard("today")}
                       </span>
                     )}
                   </Link>
@@ -115,7 +129,7 @@ export default function MeetingTable({
                   <span className="line-clamp-3 text-[13px] text-ink-muted">
                     {venueLine}
                     {distanceKm !== undefined && Number.isFinite(distanceKm) && (
-                      <> · {formatDistanceKm(distanceKm)}</>
+                      <> · {formatDistanceKm(distanceKm, tCard("kmAway"))}</>
                     )}
                   </span>
                   {m.mapLink && (
@@ -124,7 +138,9 @@ export default function MeetingTable({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      aria-label={`Get directions to ${m.venueName ?? "venue"}`}
+                      aria-label={tCard("getDirectionsAria", {
+                        venue: m.venueName ?? "",
+                      })}
                       className="shrink-0 text-indigo"
                     >
                       <Navigation size={16} />
@@ -134,13 +150,13 @@ export default function MeetingTable({
 
                 <div
                   role="cell"
-                  title={tagsSummary(m)}
+                  title={tagsSummary(m, tBadges)}
                   className="max-h-[70px] overflow-hidden"
                 >
                   <MeetingTags meeting={m} compact />
                 </div>
 
-                <div role="cell" title={verificationLabel(m)}>
+                <div role="cell" title={verificationLabel(m, tBadges)}>
                   <span className="line-clamp-3">
                     <VerificationStatus meeting={m} compact />
                   </span>

@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 export type ViewMode = "cards" | "table";
 
 export default function ViewToggle({
@@ -7,6 +9,8 @@ export default function ViewToggle({
   view: ViewMode;
   onChange: (view: ViewMode) => void;
 }) {
+  const t = useTranslations("filters");
+
   return (
     <div className="relative inline-flex items-center rounded-full border border-border bg-white p-1">
       <div
@@ -23,7 +27,7 @@ export default function ViewToggle({
           view === "cards" ? "text-white" : "text-ink"
         }`}
       >
-        Cards
+        {t("cards")}
       </button>
       <button
         type="button"
@@ -33,7 +37,7 @@ export default function ViewToggle({
           view === "table" ? "text-white" : "text-ink"
         }`}
       >
-        Table
+        {t("table")}
       </button>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   SlidersHorizontal,
   SearchX,
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 import type { District } from "@/lib/data/types";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
-import { dayName } from "@/lib/format";
 import { haversineDistanceKm } from "@/lib/geo";
 import MeetingCard from "./MeetingCard";
 import MeetingTable from "./MeetingTable";
@@ -25,24 +25,6 @@ type FormatFilter = "" | "in_person" | "online" | "hybrid";
 type LanguageFilter = "" | "hi" | "en";
 type GeoStatus = "idle" | "loading" | "active" | "error";
 
-const DAY_OPTIONS: DropdownOption[] = [
-  { value: "", label: "All days" },
-  ...[0, 1, 2, 3, 4, 5, 6].map((d) => ({ value: String(d), label: dayName(d) })),
-];
-
-const LANGUAGE_OPTIONS: DropdownOption[] = [
-  { value: "", label: "All languages" },
-  { value: "hi", label: "Hindi" },
-  { value: "en", label: "English" },
-];
-
-const FORMAT_OPTIONS: DropdownOption[] = [
-  { value: "", label: "All formats" },
-  { value: "in_person", label: "In person" },
-  { value: "online", label: "Online" },
-  { value: "hybrid", label: "Hybrid" },
-];
-
 export default function Finder({
   districts,
   meetings,
@@ -52,6 +34,33 @@ export default function Finder({
   meetings: MeetingWithDetails[];
   today: number;
 }) {
+  const t = useTranslations("filters");
+  const tEmpty = useTranslations("emptyState");
+  const tBadges = useTranslations("badges");
+  const tDays = useTranslations("days");
+  const fullDayLabels = tDays.raw("full") as string[];
+
+  const DAY_OPTIONS: DropdownOption[] = [
+    { value: "", label: t("allDays") },
+    ...[0, 1, 2, 3, 4, 5, 6].map((d) => ({
+      value: String(d),
+      label: fullDayLabels[d],
+    })),
+  ];
+
+  const LANGUAGE_OPTIONS: DropdownOption[] = [
+    { value: "", label: t("allLanguages") },
+    { value: "hi", label: tBadges("languageHindi") },
+    { value: "en", label: tBadges("languageEnglish") },
+  ];
+
+  const FORMAT_OPTIONS: DropdownOption[] = [
+    { value: "", label: t("allFormats") },
+    { value: "in_person", label: tBadges("inPerson") },
+    { value: "online", label: tBadges("online") },
+    { value: "hybrid", label: tBadges("hybrid") },
+  ];
+
   const [districtId, setDistrictId] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [language, setLanguage] = useState<LanguageFilter>("");
@@ -146,7 +155,7 @@ export default function Finder({
           }`}
         >
           <CalendarCheck size={16} />
-          Today
+          {t("today")}
         </button>
 
         <button
@@ -164,7 +173,7 @@ export default function Finder({
           ) : (
             <Locate size={16} />
           )}
-          {geoStatus === "loading" ? "Locating…" : "Near me"}
+          {geoStatus === "loading" ? t("locating") : t("nearMe")}
         </button>
 
         <button
@@ -177,7 +186,7 @@ export default function Finder({
               : "border-border bg-white text-ink"
           }`}
         >
-          All districts
+          {t("allDistricts")}
         </button>
         {districts.map((d) => (
           <button
@@ -199,7 +208,7 @@ export default function Finder({
 
         <div className="hidden items-center gap-2 md:flex">
           <FilterDropdown
-            ariaLabel="Day"
+            ariaLabel={t("dayAria")}
             value={day}
             options={DAY_OPTIONS}
             onChange={setDay}
@@ -207,7 +216,7 @@ export default function Finder({
             icon={Calendar}
           />
           <FilterDropdown
-            ariaLabel="Language"
+            ariaLabel={t("languageAria")}
             value={language}
             options={LANGUAGE_OPTIONS}
             onChange={(v) => setLanguage(v as LanguageFilter)}
@@ -215,7 +224,7 @@ export default function Finder({
             icon={Languages}
           />
           <FilterDropdown
-            ariaLabel="Format"
+            ariaLabel={t("formatAria")}
             value={format}
             options={FORMAT_OPTIONS}
             onChange={(v) => setFormat(v as FormatFilter)}
@@ -231,7 +240,7 @@ export default function Finder({
             className="flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3.5 text-sm text-ink"
           >
             <SlidersHorizontal size={16} className="text-ink-muted" />
-            Filters
+            {t("filtersLabel")}
             {dropdownFilterCount > 0 && (
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-indigo text-[10px] font-medium text-white">
                 {dropdownFilterCount}
@@ -246,15 +255,13 @@ export default function Finder({
             onClick={clearFilters}
             className="hidden text-sm text-indigo underline underline-offset-2 md:inline"
           >
-            Clear filters
+            {t("clearFilters")}
           </button>
         )}
       </div>
 
       {geoStatus === "error" && (
-        <p className="mt-2 text-sm text-terracotta">
-          Couldn&rsquo;t get your location — showing all meetings instead.
-        </p>
+        <p className="mt-2 text-sm text-terracotta">{t("geoError")}</p>
       )}
 
       <MobileFilterSheet
@@ -273,7 +280,7 @@ export default function Finder({
 
       <div className="mt-4 flex items-center justify-between">
         <p className="text-sm text-ink-muted">
-          {sorted.length} meeting{sorted.length === 1 ? "" : "s"} found
+          {t("meetingsFound", { count: sorted.length })}
         </p>
         <ViewToggle view={view} onChange={setView} />
       </div>
@@ -304,23 +311,18 @@ export default function Finder({
       ) : (
         <div className="mt-3 flex flex-col items-center gap-3 rounded-xl border border-border bg-white px-6 py-10 text-center">
           <SearchX size={32} className="text-ink-muted/50" />
-          <p className="text-sm text-ink-muted">
-            No meetings match these filters yet.
-          </p>
+          <p className="text-sm text-ink-muted">{tEmpty("message")}</p>
           {hasActiveFilters && (
             <button
               type="button"
               onClick={clearFilters}
               className="rounded-lg border border-indigo px-3 py-1.5 text-sm text-indigo"
             >
-              Clear filters
+              {t("clearFilters")}
             </button>
           )}
           <p className="mt-2 text-sm text-ink-muted">
-            Need to talk to someone now? Call{" "}
-            <a href="tel:+911414000000" className="font-medium text-indigo">
-              +91 141 400 0000
-            </a>
+            {tEmpty("helplineCallout", { number: "+91 141 400 0000" })}
           </p>
         </div>
       )}

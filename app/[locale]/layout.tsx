@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { IBM_Plex_Sans, IBM_Plex_Sans_Devanagari } from "next/font/google";
+import { routing } from "@/i18n/routing";
 import TopBar from "@/components/TopBar";
 import Footer from "@/components/Footer";
-import "./globals.css";
+import "../globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -22,16 +26,33 @@ export const metadata: Metadata = {
     "Find a current Alcoholics Anonymous meeting near you in Rajasthan.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${ibmPlexSans.variable} ${ibmPlexSansDevanagari.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink antialiased">
-        <TopBar />
-        {children}
-        <Footer />
+        <NextIntlClientProvider>
+          <TopBar />
+          {children}
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -1,22 +1,25 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import Container from "./Container";
 
-const FOOTER_LINKS = [
-  { href: "/new-to-aa", label: "New to AA" },
-  { href: "/concerned-about-someone", label: "Concerned about someone" },
-  { href: "/about-aa", label: "About AA" },
-];
-
 export default function Footer() {
+  const t = useTranslations("footer");
+  const tHomepage = useTranslations("homepage");
+  const tNav = useTranslations("nav");
+
+  const footerLinks = [
+    { href: "/new-to-aa", label: tHomepage("newToAA.title") },
+    { href: "/concerned-about-someone", label: tHomepage("concerned.title") },
+    { href: "/about-aa", label: tNav("aboutAA") },
+  ];
+
   return (
     <footer className="bg-indigo py-8">
       <Container className="flex flex-col gap-3">
-        <p className="text-sm text-white">
-          AA Rajasthan — a community-maintained meeting directory
-        </p>
+        <p className="text-sm text-white">{t("tagline")}</p>
 
         <div className="flex flex-wrap gap-6">
-          {FOOTER_LINKS.map((link) => (
+          {footerLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -32,11 +35,9 @@ export default function Footer() {
             href="tel:+911414000000"
             className="text-sm font-medium text-white"
           >
-            Helpline: +91 141 400 0000
+            {t("helpline", { number: "+91 141 400 0000" })}
           </a>
-          <span className="text-xs text-white/70">
-            No account needed. We don&rsquo;t track who searches here.
-          </span>
+          <span className="text-xs text-white/70">{t("privacy")}</span>
         </div>
       </Container>
     </footer>
