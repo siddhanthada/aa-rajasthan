@@ -150,7 +150,7 @@ export default function TopBar() {
   ];
 
   return (
-    <div className="sticky top-0 z-40 shrink-0 bg-indigo animate-fade-in">
+    <div className="sticky top-0 z-40 shrink-0 bg-indigo">
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
         aria-hidden="true"
