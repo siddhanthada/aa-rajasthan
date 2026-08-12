@@ -32,6 +32,7 @@
     "dayAria": "दिन",
     "languageAria": "भाषा",
     "formatAria": "प्रकार",
+    "districtAria": "ज़िला",
     "meetingsFound": "{count} मीटिंग मिलीं",
     "cards": "कार्ड",
     "table": "तालिका",
@@ -39,6 +40,8 @@
     "closeFilters": "फ़िल्टर बंद करें",
     "apply": "लागू करें",
     "clearFilters": "फ़िल्टर हटाएं",
+    "clearAll": "सभी हटाएं",
+    "removeFilterAria": "{label} फ़िल्टर हटाएं",
     "geoError": "आपका स्थान नहीं मिल सका — इसके बजाय सभी मीटिंग दिखाई जा रही हैं।"
   },
   "badges": {

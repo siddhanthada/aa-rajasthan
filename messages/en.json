@@ -31,6 +31,7 @@
     "dayAria": "Day",
     "languageAria": "Language",
     "formatAria": "Format",
+    "districtAria": "District",
     "meetingsFound": "{count, plural, one {# meeting found} other {# meetings found}}",
     "cards": "Cards",
     "table": "Table",
@@ -38,6 +39,8 @@
     "closeFilters": "Close filters",
     "apply": "Apply",
     "clearFilters": "Clear filters",
+    "clearAll": "Clear all",
+    "removeFilterAria": "Remove {label} filter",
     "geoError": "Couldn't get your location — showing all meetings instead."
   },
   "badges": {

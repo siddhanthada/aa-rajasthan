@@ -10,6 +10,8 @@ import {
   CalendarCheck,
   Locate,
   LocateFixed,
+  MapPin,
+  X,
 } from "lucide-react";
 import type { District } from "@/lib/data/types";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
@@ -42,6 +44,11 @@ export default function Finder({
   const tBadges = useTranslations("badges");
   const tDays = useTranslations("days");
   const fullDayLabels = tDays.raw("full") as string[];
+
+  const DISTRICT_OPTIONS: DropdownOption[] = [
+    { value: "", label: t("allDistricts") },
+    ...districts.map((d) => ({ value: d.id, label: d.name })),
+  ];
 
   const DAY_OPTIONS: DropdownOption[] = [
     { value: "", label: t("allDays") },
@@ -164,9 +171,10 @@ export default function Finder({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultsSignature]);
 
-  const dropdownFilterCount = [day, language, format].filter(Boolean).length;
-  const hasActiveFilters =
-    Boolean(districtId) || dropdownFilterCount > 0 || todayOnly;
+  const dropdownFilterCount = [districtId, day, language, format].filter(
+    Boolean,
+  ).length;
+  const hasActiveFilters = dropdownFilterCount > 0 || todayOnly;
 
   function clearFilters() {
     setDistrictId("");
@@ -175,6 +183,58 @@ export default function Finder({
     setFormat("");
     setTodayOnly(false);
   }
+
+  const languageLabels: Record<string, string> = {
+    hi: tBadges("languageHindi"),
+    en: tBadges("languageEnglish"),
+  };
+  const formatLabels: Record<string, string> = {
+    in_person: tBadges("inPerson"),
+    online: tBadges("online"),
+    hybrid: tBadges("hybrid"),
+  };
+
+  const activeFilterChips: { key: string; label: string; onClear: () => void }[] = [
+    ...(todayOnly
+      ? [{ key: "today", label: t("today"), onClear: () => setTodayOnly(false) }]
+      : []),
+    ...(districtId
+      ? [
+          {
+            key: "district",
+            label: districts.find((d) => d.id === districtId)?.name ?? "",
+            onClear: () => setDistrictId(""),
+          },
+        ]
+      : []),
+    ...(day !== ""
+      ? [
+          {
+            key: "day",
+            label: fullDayLabels[Number(day)],
+            onClear: () => setDay(""),
+          },
+        ]
+      : []),
+    ...(language
+      ? [
+          {
+            key: "language",
+            label: languageLabels[language],
+            onClear: () => setLanguage(""),
+          },
+        ]
+      : []),
+    ...(format
+      ? [
+          {
+            key: "format",
+            label: formatLabels[format],
+            onClear: () => setFormat(""),
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div>
@@ -211,37 +271,15 @@ export default function Finder({
           {geoStatus === "loading" ? t("locating") : t("nearMe")}
         </button>
 
-        <button
-          type="button"
-          onClick={() => setDistrictId("")}
-          aria-pressed={districtId === ""}
-          className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
-            districtId === ""
-              ? "border-indigo bg-indigo text-white"
-              : "border-border bg-white text-ink hover:border-indigo"
-          }`}
-        >
-          {t("allDistricts")}
-        </button>
-        {districts.map((d) => (
-          <button
-            key={d.id}
-            type="button"
-            onClick={() => setDistrictId(d.id)}
-            aria-pressed={districtId === d.id}
-            className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
-              districtId === d.id
-                ? "border-indigo bg-indigo text-white"
-                : "border-border bg-white text-ink hover:border-indigo"
-            }`}
-          >
-            {d.name}
-          </button>
-        ))}
-
-        <div className="mx-1 h-6 w-px shrink-0 bg-border" aria-hidden="true" />
-
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="ml-2 hidden items-center gap-2 md:flex">
+          <FilterDropdown
+            ariaLabel={t("districtAria")}
+            value={districtId}
+            options={DISTRICT_OPTIONS}
+            onChange={setDistrictId}
+            className="w-40"
+            icon={MapPin}
+          />
           <FilterDropdown
             ariaLabel={t("dayAria")}
             value={day}
@@ -283,17 +321,33 @@ export default function Finder({
             )}
           </button>
         </div>
-
-        {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className={`hidden text-sm text-indigo underline underline-offset-2 md:inline ${hoverTransition}`}
-          >
-            {t("clearFilters")}
-          </button>
-        )}
       </div>
+
+      {activeFilterChips.length > 0 && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          {activeFilterChips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              onClick={chip.onClear}
+              aria-label={t("removeFilterAria", { label: chip.label })}
+              className={`flex items-center gap-1 rounded-full bg-indigo/10 px-2.5 py-1.5 text-xs font-medium text-indigo ${hoverTransition} ${pressable}`}
+            >
+              {chip.label}
+              <X size={12} />
+            </button>
+          ))}
+          {activeFilterChips.length >= 2 && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className={`text-[13px] text-ink-muted hover:text-ink ${hoverTransition}`}
+            >
+              {t("clearAll")}
+            </button>
+          )}
+        </div>
+      )}
 
       {geoStatus === "error" && (
         <p className="mt-2 text-sm text-terracotta">{t("geoError")}</p>
@@ -302,12 +356,15 @@ export default function Finder({
       <MobileFilterSheet
         open={mobileFiltersOpen}
         onClose={() => setMobileFiltersOpen(false)}
+        districtOptions={DISTRICT_OPTIONS}
         dayOptions={DAY_OPTIONS}
         languageOptions={LANGUAGE_OPTIONS}
         formatOptions={FORMAT_OPTIONS}
+        districtId={districtId}
         day={day}
         language={language}
         format={format}
+        onDistrictChange={setDistrictId}
         onDayChange={setDay}
         onLanguageChange={(v) => setLanguage(v as LanguageFilter)}
         onFormatChange={(v) => setFormat(v as FormatFilter)}

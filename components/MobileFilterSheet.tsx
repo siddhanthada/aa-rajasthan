@@ -1,31 +1,37 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { X, Calendar, Languages, SlidersHorizontal } from "lucide-react";
+import { X, MapPin, Calendar, Languages, SlidersHorizontal } from "lucide-react";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 import { pressable } from "@/lib/motion";
 
 export default function MobileFilterSheet({
   open,
   onClose,
+  districtOptions,
   dayOptions,
   languageOptions,
   formatOptions,
+  districtId,
   day,
   language,
   format,
+  onDistrictChange,
   onDayChange,
   onLanguageChange,
   onFormatChange,
 }: {
   open: boolean;
   onClose: () => void;
+  districtOptions: DropdownOption[];
   dayOptions: DropdownOption[];
   languageOptions: DropdownOption[];
   formatOptions: DropdownOption[];
+  districtId: string;
   day: string;
   language: string;
   format: string;
+  onDistrictChange: (v: string) => void;
   onDayChange: (v: string) => void;
   onLanguageChange: (v: string) => void;
   onFormatChange: (v: string) => void;
@@ -53,6 +59,13 @@ export default function MobileFilterSheet({
         </div>
 
         <div className="mt-4 flex flex-col gap-4">
+          <FilterDropdown
+            ariaLabel={t("districtAria")}
+            value={districtId}
+            options={districtOptions}
+            onChange={onDistrictChange}
+            icon={MapPin}
+          />
           <FilterDropdown
             ariaLabel={t("dayAria")}
             value={day}
