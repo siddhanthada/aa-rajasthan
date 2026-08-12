@@ -69,7 +69,12 @@ export default function FilterDropdown({
           {Icon && <Icon size={16} className="shrink-0 text-ink-muted" />}
           <span className="truncate">{buttonLabel}</span>
         </span>
-        <ChevronDown size={16} className="shrink-0 text-ink-muted" />
+        <ChevronDown
+          size={16}
+          className={`shrink-0 text-ink-muted motion-safe:transition-transform motion-safe:duration-[var(--duration-base)] motion-safe:ease-standard ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {open && (

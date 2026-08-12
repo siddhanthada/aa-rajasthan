@@ -44,7 +44,12 @@ function ReasonDropdown({
         className={`flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-border bg-white px-3 text-sm text-ink hover:border-indigo ${pressable}`}
       >
         <span className="truncate">{current.label}</span>
-        <ChevronDown size={16} className="shrink-0 text-ink-muted" />
+        <ChevronDown
+          size={16}
+          className={`shrink-0 text-ink-muted motion-safe:transition-transform motion-safe:duration-[var(--duration-base)] motion-safe:ease-standard ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {open && (
