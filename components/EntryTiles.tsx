@@ -7,6 +7,7 @@ import {
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
+import { tileHover } from "@/lib/motion";
 
 export default function EntryTiles() {
   const t = useTranslations("homepage");
@@ -45,11 +46,13 @@ export default function EntryTiles() {
         <Link
           key={tile.href}
           href={tile.href}
-          className="flex items-center gap-3 rounded-xl border border-border bg-white p-4 transition-colors hover:border-indigo"
+          className={`group flex items-center gap-3 rounded-xl border border-border bg-white p-4 hover:border-indigo ${tileHover}`}
         >
           <span
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-              tile.quiet ? "border border-border bg-transparent" : "bg-indigo/10"
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] motion-safe:ease-standard ${
+              tile.quiet
+                ? "border border-border bg-transparent group-hover:border-indigo"
+                : "bg-indigo/10 group-hover:bg-indigo/20"
             }`}
           >
             <tile.icon

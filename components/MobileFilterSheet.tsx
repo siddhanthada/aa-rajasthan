@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { X, Calendar, Languages, SlidersHorizontal } from "lucide-react";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
+import { pressable } from "@/lib/motion";
 
 export default function MobileFilterSheet({
   open,
@@ -45,7 +46,7 @@ export default function MobileFilterSheet({
             type="button"
             aria-label={t("closeFilters")}
             onClick={onClose}
-            className="text-ink-muted"
+            className={`rounded text-ink-muted ${pressable}`}
           >
             <X size={20} />
           </button>
@@ -78,7 +79,7 @@ export default function MobileFilterSheet({
         <button
           type="button"
           onClick={onClose}
-          className="mt-4 w-full rounded-lg bg-indigo px-4 py-2.5 text-sm font-semibold text-white"
+          className={`mt-4 w-full rounded-lg bg-indigo px-4 py-2.5 text-sm font-semibold text-white ${pressable}`}
         >
           {t("apply")}
         </button>

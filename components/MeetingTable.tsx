@@ -8,6 +8,7 @@ import type { MeetingWithDetails } from "@/lib/data/meetings";
 import { formatDayTimeCompact } from "@/lib/format";
 import { formatDistanceKm } from "@/lib/geo";
 import { MeetingTags, VerificationStatus, verificationLabel, tagsSummary } from "./MeetingCard";
+import { hoverTransition, pressable } from "@/lib/motion";
 
 function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
@@ -18,11 +19,13 @@ export default function MeetingTable({
   today,
   distances,
   onSelect,
+  staggerFirst = 0,
 }: {
   meetings: MeetingWithDetails[];
   today: number;
   distances?: Record<string, number>;
   onSelect: (id: string) => void;
+  staggerFirst?: number;
 }) {
   const t = useTranslations("table");
   const tCard = useTranslations("card");
@@ -82,7 +85,7 @@ export default function MeetingTable({
           onScroll={syncHeaderScroll}
           className="overflow-x-auto rounded-b-xl"
         >
-          {meetings.map((m) => {
+          {meetings.map((m, index) => {
             const isToday = m.daysOfWeek.includes(today);
             const dayTime = formatDayTimeCompact(
               m.daysOfWeek,
@@ -103,13 +106,22 @@ export default function MeetingTable({
                 ? ` · ${formatDistanceKm(distanceKm, tCard("kmAway"))}`
                 : "");
 
+            const staggered = index < staggerFirst;
+
             return (
               <div
                 key={m.id}
                 role="row"
                 onClick={() => onSelect(m.id)}
-                className="grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper"
-                style={{ gridTemplateColumns: GRID_COLUMNS }}
+                className={`grid cursor-pointer gap-x-6 border-t border-border px-4 py-3 hover:bg-paper ${hoverTransition} ${
+                  staggered ? "animate-fade-rise" : ""
+                }`}
+                style={{
+                  gridTemplateColumns: GRID_COLUMNS,
+                  ...(staggered
+                    ? { animationDelay: `${index * 40}ms` }
+                    : {}),
+                }}
               >
                 <div role="cell">
                   <Link
@@ -162,7 +174,7 @@ export default function MeetingTable({
                       aria-label={tCard("getDirectionsAria", {
                         venue: m.venueName ?? "",
                       })}
-                      className="shrink-0 text-indigo"
+                      className={`shrink-0 rounded text-indigo ${pressable}`}
                     >
                       <Navigation size={16} />
                     </a>

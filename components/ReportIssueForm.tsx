@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
+import { hoverTransition, pressable } from "@/lib/motion";
 
 export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
   const t = useTranslations("meetingDetail");
@@ -42,7 +43,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
       <button
         type="button"
         onClick={() => setExpanded(true)}
-        className="text-sm font-medium text-indigo underline underline-offset-2"
+        className={`text-sm font-medium text-indigo underline underline-offset-2 ${hoverTransition}`}
       >
         {t("reportIssue")}
       </button>
@@ -75,7 +76,7 @@ export default function ReportIssueForm({ meetingId }: { meetingId: string }) {
       <button
         type="submit"
         disabled={!reason}
-        className="w-fit rounded-lg bg-indigo px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+        className={`w-fit rounded-lg bg-indigo px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50 ${pressable}`}
       >
         {tReport("submit")}
       </button>

@@ -1,42 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { Menu, X, Phone } from "lucide-react";
 import Container from "./Container";
+import { pressable } from "@/lib/motion";
 
 function LanguageToggle() {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const enRef = useRef<HTMLButtonElement>(null);
+  const hiRef = useRef<HTMLButtonElement>(null);
+  const [indicator, setIndicator] = useState<{ left: number; width: number }>(
+    { left: 0, width: 0 },
+  );
+
+  useLayoutEffect(() => {
+    function measure() {
+      const el = locale === "en" ? enRef.current : hiRef.current;
+      if (el) {
+        setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+      }
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [locale]);
 
   function switchTo(nextLocale: "en" | "hi") {
     router.replace(pathname, { locale: nextLocale });
   }
 
   return (
-    <div className="flex items-center gap-0.5 rounded-full bg-white/10 p-0.5">
+    <div className="relative flex items-center gap-0.5 rounded-full bg-white/10 p-0.5">
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0.5 left-0 rounded-full bg-white/20 motion-safe:transition-[transform,width] motion-safe:duration-[var(--duration-base)] motion-safe:ease-decel"
+        style={{
+          transform: `translateX(${indicator.left}px)`,
+          width: indicator.width,
+        }}
+      />
       <button
+        ref={enRef}
         type="button"
         onClick={() => switchTo("en")}
         aria-pressed={locale === "en"}
-        className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-          locale === "en"
-            ? "bg-white/20 text-white"
-            : "text-white/60 hover:text-white/85"
+        className={`relative z-10 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
+          locale === "en" ? "text-white" : "text-white/60 hover:text-white/85"
         }`}
       >
         EN
       </button>
       <button
+        ref={hiRef}
         type="button"
         onClick={() => switchTo("hi")}
         aria-pressed={locale === "hi"}
-        className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-          locale === "hi"
-            ? "bg-white/20 text-white"
-            : "text-white/60 hover:text-white/85"
+        className={`relative z-10 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
+          locale === "hi" ? "text-white" : "text-white/60 hover:text-white/85"
         }`}
       >
         हिंदी
@@ -100,7 +124,7 @@ export default function TopBar() {
           aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
-          className="text-white md:hidden"
+          className="rounded-md text-white motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] md:hidden"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -112,7 +136,7 @@ export default function TopBar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-[12px] font-medium uppercase tracking-[0.04em] text-white transition-opacity ${
+                className={`text-[12px] font-medium uppercase tracking-[0.04em] text-white motion-safe:transition-opacity motion-safe:duration-[var(--duration-base)] ${
                   active
                     ? "underline decoration-2 underline-offset-[2px] opacity-100"
                     : "opacity-75 hover:opacity-100"
@@ -128,7 +152,7 @@ export default function TopBar() {
           <a
             href="tel:+911414000000"
             aria-label={t("helpline")}
-            className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-terracotta px-3 py-2 text-[13px] font-semibold text-white sm:px-4"
+            className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-terracotta px-3 py-2 text-[13px] font-semibold text-white sm:px-4 ${pressable}`}
           >
             <Phone size={14} />
             <span className="hidden sm:inline">+91 141 400 0000</span>
@@ -144,7 +168,7 @@ export default function TopBar() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className={`block px-8 py-4 text-sm font-medium text-white ${
+              className={`block px-8 py-4 text-sm font-medium text-white motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
                 pathname === link.href ? "bg-white/12" : "opacity-70"
               }`}
             >

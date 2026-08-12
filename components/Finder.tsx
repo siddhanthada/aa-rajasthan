@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   SlidersHorizontal,
@@ -20,10 +20,13 @@ import MeetingOverlay from "./MeetingOverlay";
 import FilterDropdown, { type DropdownOption } from "./FilterDropdown";
 import MobileFilterSheet from "./MobileFilterSheet";
 import ViewToggle, { type ViewMode } from "./ViewToggle";
+import { hoverTransition, pressable } from "@/lib/motion";
 
 type FormatFilter = "" | "in_person" | "online" | "hybrid";
 type LanguageFilter = "" | "hi" | "en";
 type GeoStatus = "idle" | "loading" | "active" | "error";
+
+const STAGGER_CAP = 6;
 
 export default function Finder({
   districts,
@@ -74,6 +77,15 @@ export default function Finder({
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
     null,
   );
+
+  // Initial-load stagger window: the first 6 result items get a staggered
+  // entrance only while this is true, so later filter-driven re-renders
+  // (handled by the cross-fade below) don't replay it.
+  const [initialLoad, setInitialLoad] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setInitialLoad(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   function handleNearMe() {
     if (geoStatus === "active") {
@@ -129,6 +141,29 @@ export default function Finder({
     );
   }, [filtered, distances]);
 
+  // Cross-fade the result area when the filtered set changes: briefly fade
+  // out the old results, swap, then fade the new ones in. Skipped on the
+  // very first render so initial load uses the stagger-in instead.
+  const resultsSignature = sorted.map((m) => m.id).join(",");
+  const [displayed, setDisplayed] = useState(sorted);
+  const [resultsVisible, setResultsVisible] = useState(true);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      setDisplayed(sorted);
+      return;
+    }
+    setResultsVisible(false);
+    const hideTimer = setTimeout(() => {
+      setDisplayed(sorted);
+      setResultsVisible(true);
+    }, 100);
+    return () => clearTimeout(hideTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultsSignature]);
+
   const dropdownFilterCount = [day, language, format].filter(Boolean).length;
   const hasActiveFilters =
     Boolean(districtId) || dropdownFilterCount > 0 || todayOnly;
@@ -143,15 +178,15 @@ export default function Finder({
 
   return (
     <div>
-      <div className="mt-5 flex flex-wrap items-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center gap-2 animate-fade-rise">
         <button
           type="button"
           onClick={() => setTodayOnly((v) => !v)}
           aria-pressed={todayOnly}
-          className={`flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+          className={`flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
             todayOnly
               ? "border-indigo bg-indigo text-white"
-              : "border-border bg-white text-ink"
+              : "border-border bg-white text-ink hover:border-indigo"
           }`}
         >
           <CalendarCheck size={16} />
@@ -162,10 +197,10 @@ export default function Finder({
           type="button"
           onClick={handleNearMe}
           aria-pressed={geoStatus === "active"}
-          className={`flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+          className={`flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
             geoStatus === "active"
               ? "border-indigo bg-indigo text-white"
-              : "border-border bg-white text-ink"
+              : "border-border bg-white text-ink hover:border-indigo"
           }`}
         >
           {geoStatus === "active" ? (
@@ -180,10 +215,10 @@ export default function Finder({
           type="button"
           onClick={() => setDistrictId("")}
           aria-pressed={districtId === ""}
-          className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+          className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
             districtId === ""
               ? "border-indigo bg-indigo text-white"
-              : "border-border bg-white text-ink"
+              : "border-border bg-white text-ink hover:border-indigo"
           }`}
         >
           {t("allDistricts")}
@@ -194,10 +229,10 @@ export default function Finder({
             type="button"
             onClick={() => setDistrictId(d.id)}
             aria-pressed={districtId === d.id}
-            className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${
+            className={`h-9 shrink-0 whitespace-nowrap rounded-lg border px-3.5 text-sm ${hoverTransition} ${pressable} ${
               districtId === d.id
                 ? "border-indigo bg-indigo text-white"
-                : "border-border bg-white text-ink"
+                : "border-border bg-white text-ink hover:border-indigo"
             }`}
           >
             {d.name}
@@ -237,7 +272,7 @@ export default function Finder({
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3.5 text-sm text-ink"
+            className={`flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3.5 text-sm text-ink hover:border-indigo ${hoverTransition} ${pressable}`}
           >
             <SlidersHorizontal size={16} className="text-ink-muted" />
             {t("filtersLabel")}
@@ -253,7 +288,7 @@ export default function Finder({
           <button
             type="button"
             onClick={clearFilters}
-            className="hidden text-sm text-indigo underline underline-offset-2 md:inline"
+            className={`hidden text-sm text-indigo underline underline-offset-2 md:inline ${hoverTransition}`}
           >
             {t("clearFilters")}
           </button>
@@ -285,47 +320,63 @@ export default function Finder({
         <ViewToggle view={view} onChange={setView} />
       </div>
 
-      {sorted.length > 0 ? (
-        view === "cards" ? (
-          <ul className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {sorted.map((m) => (
-              <MeetingCard
-                key={m.id}
-                meeting={m}
-                isToday={m.daysOfWeek.includes(today)}
-                distanceKm={distances?.[m.id]}
+      <div
+        className="motion-safe:transition-opacity motion-safe:ease-standard"
+        style={{
+          opacity: resultsVisible ? 1 : 0,
+          transitionDuration: resultsVisible
+            ? "var(--duration-slow)"
+            : "100ms",
+        }}
+      >
+        {displayed.length > 0 ? (
+          view === "cards" ? (
+            <ul className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {displayed.map((m, index) => (
+                <MeetingCard
+                  key={m.id}
+                  meeting={m}
+                  isToday={m.daysOfWeek.includes(today)}
+                  distanceKm={distances?.[m.id]}
+                  onSelect={setSelectedId}
+                  entranceDelay={
+                    initialLoad && index < STAGGER_CAP
+                      ? index * 40
+                      : undefined
+                  }
+                />
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-3">
+              <MeetingTable
+                meetings={displayed}
+                today={today}
+                distances={distances}
                 onSelect={setSelectedId}
+                staggerFirst={initialLoad ? STAGGER_CAP : 0}
               />
-            ))}
-          </ul>
+            </div>
+          )
         ) : (
-          <div className="mt-3">
-            <MeetingTable
-              meetings={sorted}
-              today={today}
-              distances={distances}
-              onSelect={setSelectedId}
-            />
+          <div className="mt-3 flex flex-col items-center gap-3 rounded-xl border border-border bg-white px-6 py-10 text-center">
+            <SearchX size={32} className="text-ink-muted/50" />
+            <p className="text-sm text-ink-muted">{tEmpty("message")}</p>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className={`rounded-lg border border-indigo px-3 py-1.5 text-sm text-indigo ${hoverTransition} ${pressable}`}
+              >
+                {t("clearFilters")}
+              </button>
+            )}
+            <p className="mt-2 text-sm text-ink-muted">
+              {tEmpty("helplineCallout", { number: "+91 141 400 0000" })}
+            </p>
           </div>
-        )
-      ) : (
-        <div className="mt-3 flex flex-col items-center gap-3 rounded-xl border border-border bg-white px-6 py-10 text-center">
-          <SearchX size={32} className="text-ink-muted/50" />
-          <p className="text-sm text-ink-muted">{tEmpty("message")}</p>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="rounded-lg border border-indigo px-3 py-1.5 text-sm text-indigo"
-            >
-              {t("clearFilters")}
-            </button>
-          )}
-          <p className="mt-2 text-sm text-ink-muted">
-            {tEmpty("helplineCallout", { number: "+91 141 400 0000" })}
-          </p>
-        </div>
-      )}
+        )}
+      </div>
 
       <MeetingOverlay
         meeting={meetings.find((m) => m.id === selectedId) ?? null}

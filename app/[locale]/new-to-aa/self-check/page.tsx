@@ -2,51 +2,84 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 import { Info, HeartHandshake } from "lucide-react";
 import Container from "@/components/Container";
+import { pressable } from "@/lib/motion";
 
 type Answer = "yes" | "no";
+
+const EASE_STANDARD = [0.4, 0, 0.2, 1] as const;
+
+const contentVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.2, ease: EASE_STANDARD } },
+  exit: { opacity: 0, transition: { duration: 0.15, ease: EASE_STANDARD } },
+};
 
 function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
   const t = useTranslations("selfCheck");
 
-  if (!hasYes) {
-    return (
-      <div className="rounded-xl border border-border bg-paper p-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-muted">
-          <Info size={18} className="text-ink-muted" />
-        </div>
-        <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-          {t("panel.default")}
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="rounded-xl border-2 border-terracotta bg-terracotta/8 p-5">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta/15">
-        <HeartHandshake size={18} className="text-terracotta" />
-      </div>
-      <p className="mt-3 text-sm leading-relaxed text-ink">
-        {t("panel.resonates")}
-      </p>
-      <div className="mt-4 flex flex-col gap-2">
-        <Link
-          href="/"
-          className="rounded-lg bg-indigo px-4 py-2.5 text-center text-sm font-semibold text-white"
-        >
-          {t("findAMeeting")}
-        </Link>
-        <a
-          href="tel:+911414000000"
-          className="rounded-lg border border-indigo px-4 py-2.5 text-center text-sm font-semibold text-indigo"
-        >
-          {t("callHelpline")}
-        </a>
-      </div>
-    </div>
+    <motion.div
+      className="rounded-xl p-5"
+      style={{ borderStyle: "solid" }}
+      animate={{
+        backgroundColor: hasYes ? "rgba(181,80,46,0.08)" : "#F7F4EE",
+        borderColor: hasYes ? "#B5502E" : "#D8D2C4",
+        borderWidth: hasYes ? 2 : 1,
+      }}
+      transition={{ duration: 0.28, ease: EASE_STANDARD }}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {hasYes ? (
+          <motion.div
+            key="resonates"
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-terracotta/15">
+              <HeartHandshake size={18} className="text-terracotta" />
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-ink">
+              {t("panel.resonates")}
+            </p>
+            <div className="mt-4 flex flex-col gap-2">
+              <Link
+                href="/"
+                className={`rounded-lg bg-indigo px-4 py-2.5 text-center text-sm font-semibold text-white ${pressable}`}
+              >
+                {t("findAMeeting")}
+              </Link>
+              <a
+                href="tel:+911414000000"
+                className={`rounded-lg border border-indigo px-4 py-2.5 text-center text-sm font-semibold text-indigo ${pressable}`}
+              >
+                {t("callHelpline")}
+              </a>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="default"
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-ink-muted">
+              <Info size={18} className="text-ink-muted" />
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+              {t("panel.default")}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -88,11 +121,11 @@ export default function SelfCheck() {
               <div className="flex gap-2">
                 {QUESTIONS.map((_, index) => (
                   <span
-                    key={index}
+                    key={`${index}-${answers[index] !== undefined}`}
                     aria-hidden="true"
-                    className={`h-2 w-2 rounded-full ${
+                    className={`h-2 w-2 rounded-full motion-safe:transition-colors motion-safe:duration-[var(--duration-base)] ${
                       answers[index] !== undefined
-                        ? "bg-indigo"
+                        ? "animate-dot-pop bg-indigo"
                         : "border border-border"
                     }`}
                   />
@@ -113,7 +146,7 @@ export default function SelfCheck() {
                         type="button"
                         onClick={() => answer(index, "yes")}
                         aria-pressed={answers[index] === "yes"}
-                        className={`rounded-lg border px-4 py-1.5 text-sm font-medium ${
+                        className={`rounded-lg border px-4 py-1.5 text-sm font-medium ${pressable} ${
                           answers[index] === "yes"
                             ? "border-indigo bg-indigo text-white"
                             : "border-border bg-white text-ink"
@@ -125,7 +158,7 @@ export default function SelfCheck() {
                         type="button"
                         onClick={() => answer(index, "no")}
                         aria-pressed={answers[index] === "no"}
-                        className={`rounded-lg border px-4 py-1.5 text-sm font-medium ${
+                        className={`rounded-lg border px-4 py-1.5 text-sm font-medium ${pressable} ${
                           answers[index] === "no"
                             ? "border-indigo bg-indigo text-white"
                             : "border-border bg-white text-ink"

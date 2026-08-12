@@ -13,6 +13,7 @@ import {
 import type { MeetingWithDetails } from "@/lib/data/meetings";
 import { formatDays, formatFormat, formatLanguage, formatTimeRange, formatDate } from "@/lib/format";
 import { formatDistanceKm } from "@/lib/geo";
+import { hoverTransition, pressable } from "@/lib/motion";
 
 type Translate = (key: string) => string;
 
@@ -121,11 +122,13 @@ export default function MeetingCard({
   isToday,
   distanceKm,
   onSelect,
+  entranceDelay,
 }: {
   meeting: MeetingWithDetails;
   isToday: boolean;
   distanceKm?: number;
   onSelect?: (id: string) => void;
+  entranceDelay?: number;
 }) {
   const t = useTranslations("card");
   const tDays = useTranslations("days");
@@ -139,7 +142,14 @@ export default function MeetingCard({
         } · ${meeting.districtName}`;
 
   return (
-    <li>
+    <li
+      className={entranceDelay !== undefined ? "animate-fade-rise" : undefined}
+      style={
+        entranceDelay !== undefined
+          ? { animationDelay: `${entranceDelay}ms` }
+          : undefined
+      }
+    >
       <Link
         href={`/meetings/${meeting.id}`}
         onClick={(e) => {
@@ -147,7 +157,7 @@ export default function MeetingCard({
           e.preventDefault();
           onSelect(meeting.id);
         }}
-        className="group relative block rounded-xl border border-border bg-white p-4 transition-colors hover:border-indigo hover:bg-indigo/3"
+        className={`group relative block rounded-xl border border-border bg-white p-4 hover:border-indigo hover:bg-indigo/3 ${hoverTransition}`}
       >
         {isToday && (
           <span className="absolute right-4 top-4 rounded-full bg-indigo px-2.5 py-1 text-xs font-medium text-white">
@@ -183,7 +193,7 @@ export default function MeetingCard({
               aria-label={t("getDirectionsAria", {
                 venue: meeting.venueName ?? "",
               })}
-              className="shrink-0 text-indigo"
+              className={`shrink-0 rounded text-indigo ${pressable}`}
             >
               <Navigation size={16} />
             </button>

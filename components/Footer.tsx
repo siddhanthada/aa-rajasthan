@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Heart, ExternalLink } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import Container from "./Container";
+import { hoverTransition } from "@/lib/motion";
 
 export default function Footer() {
   const t = useTranslations("footer");
@@ -24,7 +25,7 @@ export default function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[13px] text-white/80 hover:text-white"
+              className={`text-[13px] text-white/80 hover:text-white ${hoverTransition}`}
             >
               {link.label}
             </Link>
@@ -46,7 +47,7 @@ export default function Footer() {
             href="https://www.siddhant.design/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 text-xs text-white/50 hover:text-white/70"
+            className={`flex items-center justify-center gap-1 text-xs text-white/50 hover:text-white/70 ${hoverTransition}`}
           >
             <span>Made with</span>
             <Heart size={12} className="fill-current" />

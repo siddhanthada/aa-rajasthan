@@ -8,6 +8,12 @@
   --color-terracotta: #b5502e;
   --color-sandstone: #8a6d3b;
   --color-border: #d8d2c4;
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decel: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 280ms;
 }
 
 @theme inline {
@@ -20,6 +26,12 @@
   --color-border: var(--color-border);
   --font-sans: var(--font-ibm-plex-sans), var(--font-ibm-plex-sans-devanagari),
     sans-serif;
+
+  --ease-standard: var(--ease-standard);
+  --ease-decel: var(--ease-decel);
+  --duration-fast: var(--duration-fast);
+  --duration-base: var(--duration-base);
+  --duration-slow: var(--duration-slow);
 }
 
 body {
@@ -27,3 +39,59 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+/* Focus is an accessibility signal, not decorative motion — always on,
+   regardless of prefers-reduced-motion. */
+:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+/* Entrance keyframes for the finder's first page-load only. Gated
+   behind reduced-motion below so they never fire transforms for
+   users who've asked for less motion. */
+@keyframes fade-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-rise {
+    animation: fade-rise-in var(--duration-slow) var(--ease-decel) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-rise {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Self-check progress dots: a small "pop" the instant a dot fills in,
+   confirming the answer registered. Triggered by remounting the dot
+   (via a key change) exactly when it transitions from empty to filled. */
+@keyframes dot-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-dot-pop {
+    animation: dot-pop var(--duration-base) var(--ease-standard);
+  }
+}
+
