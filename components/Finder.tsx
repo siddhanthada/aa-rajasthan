@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import {
   SlidersHorizontal,
   SearchX,
+  Search,
   Calendar,
   Languages,
   CalendarCheck,
@@ -70,6 +71,8 @@ export default function Finder({
   const [languages, setLanguages] = useState<string[]>([]);
   const [formats, setFormats] = useState<string[]>([]);
   const [todayOnly, setTodayOnly] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<ViewMode>("cards");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -91,6 +94,16 @@ export default function Finder({
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Debounce the search text so filtering doesn't recompute on every
+  // keystroke; the input itself stays instantly responsive.
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setSearch(searchInput.trim().toLowerCase()),
+      150,
+    );
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   function handleNearMe() {
     if (geoStatus === "active") {
@@ -132,9 +145,25 @@ export default function Finder({
         return false;
       if (formats.length > 0 && !formats.includes(m.format)) return false;
       if (todayOnly && !m.daysOfWeek.includes(today)) return false;
+      if (search) {
+        const haystack = [m.groupName, m.venueName, m.venueLocality]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        if (!haystack.includes(search)) return false;
+      }
       return true;
     });
-  }, [meetings, districtIds, days, languages, formats, todayOnly, today]);
+  }, [
+    meetings,
+    districtIds,
+    days,
+    languages,
+    formats,
+    todayOnly,
+    today,
+    search,
+  ]);
 
   const distances = useMemo(() => {
     if (!coords) return undefined;
@@ -188,7 +217,8 @@ export default function Finder({
 
   const dropdownFilterCount =
     districtIds.length + days.length + languages.length + formats.length;
-  const hasActiveFilters = dropdownFilterCount > 0 || todayOnly;
+  const hasActiveFilters =
+    dropdownFilterCount > 0 || todayOnly || searchInput.trim() !== "";
 
   function clearFilters() {
     setDistrictIds([]);
@@ -196,6 +226,7 @@ export default function Finder({
     setLanguages([]);
     setFormats([]);
     setTodayOnly(false);
+    setSearchInput("");
   }
 
   const languageLabels: Record<string, string> = {
@@ -209,6 +240,15 @@ export default function Finder({
   };
 
   const activeFilterChips: { key: string; label: string; onClear: () => void }[] = [
+    ...(searchInput.trim() !== ""
+      ? [
+          {
+            key: "search",
+            label: t("searchChipLabel", { query: searchInput.trim() }),
+            onClear: () => setSearchInput(""),
+          },
+        ]
+      : []),
     ...(todayOnly
       ? [{ key: "today", label: t("today"), onClear: () => setTodayOnly(false) }]
       : []),
@@ -238,7 +278,35 @@ export default function Finder({
   return (
     <div>
       <div
-        className="relative z-30 mt-5 flex flex-wrap items-center gap-2 animate-fade-rise"
+        className="relative mt-4 mb-4 animate-fade-rise"
+        style={{ animationDelay: `${FILTERS_START}ms` }}
+      >
+        <Search
+          size={18}
+          className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted"
+        />
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("searchAria")}
+          className={`h-11 w-full rounded-lg border border-border bg-white pl-11 pr-10 text-sm text-ink placeholder:text-ink-muted focus:border-indigo ${hoverTransition}`}
+        />
+        {searchInput && (
+          <button
+            type="button"
+            onClick={() => setSearchInput("")}
+            aria-label={t("clearSearchAria")}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 rounded text-ink-muted ${pressable}`}
+          >
+            <X size={16} />
+          </button>
+        )}
+      </div>
+
+      <div
+        className="relative z-30 flex flex-wrap items-center gap-2 animate-fade-rise"
         style={{ animationDelay: `${FILTERS_START}ms` }}
       >
         <button
