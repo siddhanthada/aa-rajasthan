@@ -26,7 +26,8 @@ import { hoverTransition, pressable, FILTERS_START, CARDS_START } from "@/lib/mo
 
 type GeoStatus = "idle" | "loading" | "active" | "error";
 
-const STAGGER_CAP = 6;
+const STAGGER_CAP = 4;
+const STAGGER_STEP = 20;
 
 export default function Finder({
   districts,
@@ -83,7 +84,7 @@ export default function Finder({
   // (handled by the cross-fade below) don't replay it. Must stay true long
   // enough to cover the full nav → tiles → filters → cards sequence, or
   // the class gets removed before the delayed card animations ever start.
-  const SEQUENCE_END = CARDS_START + STAGGER_CAP * 40 + 280;
+  const SEQUENCE_END = CARDS_START + STAGGER_CAP * STAGGER_STEP + 190;
   const [initialLoad, setInitialLoad] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => setInitialLoad(false), SEQUENCE_END + 50);
@@ -411,7 +412,7 @@ export default function Finder({
                   onSelect={setSelectedId}
                   entranceDelay={
                     initialLoad
-                      ? CARDS_START + Math.min(index, STAGGER_CAP) * 40
+                      ? CARDS_START + Math.min(index, STAGGER_CAP) * STAGGER_STEP
                       : undefined
                   }
                 />

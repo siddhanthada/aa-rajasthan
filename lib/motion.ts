@@ -15,14 +15,11 @@ export const tileHover =
 
 // Page-load sequence timing (ms): nav fades in first, then the homepage
 // tiles stagger in, then the filter block, then the result cards/rows —
-// each stage's start delay is computed from when the previous one visibly
-// finishes, so the whole thing reads top-to-bottom rather than firing at
-// once. Values are derived from the duration tokens in globals.css.
-const NAV_DURATION = 200; // matches --duration-base
-export const TILE_STAGGER = 80;
-export const TILES_START = NAV_DURATION;
-const TILE_DURATION = 280; // matches --duration-slow
-const TILES_COUNT = 3;
-export const FILTERS_START =
-  TILES_START + (TILES_COUNT - 1) * TILE_STAGGER + TILE_DURATION;
-export const CARDS_START = FILTERS_START + TILE_DURATION;
+// each stage starts a beat after the previous one *begins* (not after it
+// fully finishes) so the sequence still reads top-to-bottom without the
+// whole page taking over a second to settle. Values are derived from the
+// duration tokens in globals.css.
+export const TILE_STAGGER = 30;
+export const TILES_START = 60;
+export const FILTERS_START = 130;
+export const CARDS_START = 190;

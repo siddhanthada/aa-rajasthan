@@ -14,8 +14,8 @@ const EASE_STANDARD = [0.4, 0, 0.2, 1] as const;
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.2, ease: EASE_STANDARD } },
-  exit: { opacity: 0, transition: { duration: 0.15, ease: EASE_STANDARD } },
+  visible: { opacity: 1, transition: { duration: 0.14, ease: EASE_STANDARD } },
+  exit: { opacity: 0, transition: { duration: 0.1, ease: EASE_STANDARD } },
 };
 
 function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
@@ -30,7 +30,7 @@ function ReflectionPanel({ hasYes }: { hasYes: boolean }) {
         borderColor: hasYes ? "#B5502E" : "#D8D2C4",
         borderWidth: hasYes ? 2 : 1,
       }}
-      transition={{ duration: 0.28, ease: EASE_STANDARD }}
+      transition={{ duration: 0.19, ease: EASE_STANDARD }}
     >
       <AnimatePresence mode="wait" initial={false}>
         {hasYes ? (

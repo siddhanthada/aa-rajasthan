@@ -13,20 +13,20 @@ const EASE_DECEL = [0.16, 1, 0.3, 1] as const;
 
 const backdropVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.2, ease: EASE_STANDARD } },
-  exit: { opacity: 0, transition: { duration: 0.2, ease: EASE_STANDARD } },
+  visible: { opacity: 1, transition: { duration: 0.14, ease: EASE_STANDARD } },
+  exit: { opacity: 0, transition: { duration: 0.14, ease: EASE_STANDARD } },
 };
 
 const panelVariants: Variants = {
   hidden: { x: "100%" },
-  visible: { x: 0, transition: { duration: 0.28, ease: EASE_DECEL } },
-  exit: { x: "100%", transition: { duration: 0.2, ease: EASE_STANDARD } },
+  visible: { x: 0, transition: { duration: 0.19, ease: EASE_DECEL } },
+  exit: { x: "100%", transition: { duration: 0.14, ease: EASE_STANDARD } },
 };
 
 const sheetVariants: Variants = {
   hidden: { y: "100%" },
-  visible: { y: 0, transition: { duration: 0.28, ease: EASE_DECEL } },
-  exit: { y: "100%", transition: { duration: 0.2, ease: EASE_STANDARD } },
+  visible: { y: 0, transition: { duration: 0.19, ease: EASE_DECEL } },
+  exit: { y: "100%", transition: { duration: 0.14, ease: EASE_STANDARD } },
 };
 
 export default function MeetingOverlay({

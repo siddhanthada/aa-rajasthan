@@ -14,7 +14,8 @@ function isModifiedClick(e: React.MouseEvent) {
   return e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1;
 }
 
-const STAGGER_CAP = 6;
+const STAGGER_CAP = 4;
+const STAGGER_STEP = 20;
 
 export default function MeetingTable({
   meetings,
@@ -120,7 +121,7 @@ export default function MeetingTable({
                   gridTemplateColumns: GRID_COLUMNS,
                   ...(staggerEntrance
                     ? {
-                        animationDelay: `${CARDS_START + Math.min(index, STAGGER_CAP) * 40}ms`,
+                        animationDelay: `${CARDS_START + Math.min(index, STAGGER_CAP) * STAGGER_STEP}ms`,
                       }
                     : {}),
                 }}
