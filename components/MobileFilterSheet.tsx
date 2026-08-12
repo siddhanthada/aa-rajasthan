@@ -12,10 +12,10 @@ export default function MobileFilterSheet({
   dayOptions,
   languageOptions,
   formatOptions,
-  districtId,
-  day,
-  language,
-  format,
+  districtIds,
+  days,
+  languages,
+  formats,
   onDistrictChange,
   onDayChange,
   onLanguageChange,
@@ -27,14 +27,14 @@ export default function MobileFilterSheet({
   dayOptions: DropdownOption[];
   languageOptions: DropdownOption[];
   formatOptions: DropdownOption[];
-  districtId: string;
-  day: string;
-  language: string;
-  format: string;
-  onDistrictChange: (v: string) => void;
-  onDayChange: (v: string) => void;
-  onLanguageChange: (v: string) => void;
-  onFormatChange: (v: string) => void;
+  districtIds: string[];
+  days: string[];
+  languages: string[];
+  formats: string[];
+  onDistrictChange: (v: string[]) => void;
+  onDayChange: (v: string[]) => void;
+  onLanguageChange: (v: string[]) => void;
+  onFormatChange: (v: string[]) => void;
 }) {
   const t = useTranslations("filters");
 
@@ -61,30 +61,42 @@ export default function MobileFilterSheet({
         <div className="mt-4 flex flex-col gap-4">
           <FilterDropdown
             ariaLabel={t("districtAria")}
-            value={districtId}
+            values={districtIds}
             options={districtOptions}
             onChange={onDistrictChange}
+            allLabel={t("allDistricts")}
+            countLabel={(count) => t("districtsCount", { count })}
+            clearLabel={t("clear")}
             icon={MapPin}
           />
           <FilterDropdown
             ariaLabel={t("dayAria")}
-            value={day}
+            values={days}
             options={dayOptions}
             onChange={onDayChange}
+            allLabel={t("allDays")}
+            countLabel={(count) => t("daysCount", { count })}
+            clearLabel={t("clear")}
             icon={Calendar}
           />
           <FilterDropdown
             ariaLabel={t("languageAria")}
-            value={language}
+            values={languages}
             options={languageOptions}
             onChange={onLanguageChange}
+            allLabel={t("allLanguages")}
+            countLabel={(count) => t("languagesCount", { count })}
+            clearLabel={t("clear")}
             icon={Languages}
           />
           <FilterDropdown
             ariaLabel={t("formatAria")}
-            value={format}
+            values={formats}
             options={formatOptions}
             onChange={onFormatChange}
+            allLabel={t("allFormats")}
+            countLabel={(count) => t("formatsCount", { count })}
+            clearLabel={t("clear")}
             icon={SlidersHorizontal}
           />
         </div>

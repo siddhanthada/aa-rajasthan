@@ -24,8 +24,6 @@ import MobileFilterSheet from "./MobileFilterSheet";
 import ViewToggle, { type ViewMode } from "./ViewToggle";
 import { hoverTransition, pressable } from "@/lib/motion";
 
-type FormatFilter = "" | "in_person" | "online" | "hybrid";
-type LanguageFilter = "" | "hi" | "en";
 type GeoStatus = "idle" | "loading" | "active" | "error";
 
 const STAGGER_CAP = 6;
@@ -45,36 +43,31 @@ export default function Finder({
   const tDays = useTranslations("days");
   const fullDayLabels = tDays.raw("full") as string[];
 
-  const DISTRICT_OPTIONS: DropdownOption[] = [
-    { value: "", label: t("allDistricts") },
-    ...districts.map((d) => ({ value: d.id, label: d.name })),
-  ];
+  const DISTRICT_OPTIONS: DropdownOption[] = districts.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
 
-  const DAY_OPTIONS: DropdownOption[] = [
-    { value: "", label: t("allDays") },
-    ...[0, 1, 2, 3, 4, 5, 6].map((d) => ({
-      value: String(d),
-      label: fullDayLabels[d],
-    })),
-  ];
+  const DAY_OPTIONS: DropdownOption[] = [0, 1, 2, 3, 4, 5, 6].map((d) => ({
+    value: String(d),
+    label: fullDayLabels[d],
+  }));
 
   const LANGUAGE_OPTIONS: DropdownOption[] = [
-    { value: "", label: t("allLanguages") },
     { value: "hi", label: tBadges("languageHindi") },
     { value: "en", label: tBadges("languageEnglish") },
   ];
 
   const FORMAT_OPTIONS: DropdownOption[] = [
-    { value: "", label: t("allFormats") },
     { value: "in_person", label: tBadges("inPerson") },
     { value: "online", label: tBadges("online") },
     { value: "hybrid", label: tBadges("hybrid") },
   ];
 
-  const [districtId, setDistrictId] = useState<string>("");
-  const [day, setDay] = useState<string>("");
-  const [language, setLanguage] = useState<LanguageFilter>("");
-  const [format, setFormat] = useState<FormatFilter>("");
+  const [districtIds, setDistrictIds] = useState<string[]>([]);
+  const [days, setDays] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [formats, setFormats] = useState<string[]>([]);
   const [todayOnly, setTodayOnly] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<ViewMode>("cards");
@@ -120,14 +113,23 @@ export default function Finder({
 
   const filtered = useMemo(() => {
     return meetings.filter((m) => {
-      if (districtId && m.districtId !== districtId) return false;
-      if (day !== "" && !m.daysOfWeek.includes(Number(day))) return false;
-      if (language && !m.languages.includes(language)) return false;
-      if (format && m.format !== format) return false;
+      if (districtIds.length > 0 && !districtIds.includes(m.districtId))
+        return false;
+      if (
+        days.length > 0 &&
+        !m.daysOfWeek.some((d) => days.includes(String(d)))
+      )
+        return false;
+      if (
+        languages.length > 0 &&
+        !m.languages.some((l) => languages.includes(l))
+      )
+        return false;
+      if (formats.length > 0 && !formats.includes(m.format)) return false;
       if (todayOnly && !m.daysOfWeek.includes(today)) return false;
       return true;
     });
-  }, [meetings, districtId, day, language, format, todayOnly, today]);
+  }, [meetings, districtIds, days, languages, formats, todayOnly, today]);
 
   const distances = useMemo(() => {
     if (!coords) return undefined;
@@ -179,16 +181,15 @@ export default function Finder({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultsSignature]);
 
-  const dropdownFilterCount = [districtId, day, language, format].filter(
-    Boolean,
-  ).length;
+  const dropdownFilterCount =
+    districtIds.length + days.length + languages.length + formats.length;
   const hasActiveFilters = dropdownFilterCount > 0 || todayOnly;
 
   function clearFilters() {
-    setDistrictId("");
-    setDay("");
-    setLanguage("");
-    setFormat("");
+    setDistrictIds([]);
+    setDays([]);
+    setLanguages([]);
+    setFormats([]);
     setTodayOnly(false);
   }
 
@@ -206,42 +207,27 @@ export default function Finder({
     ...(todayOnly
       ? [{ key: "today", label: t("today"), onClear: () => setTodayOnly(false) }]
       : []),
-    ...(districtId
-      ? [
-          {
-            key: "district",
-            label: districts.find((d) => d.id === districtId)?.name ?? "",
-            onClear: () => setDistrictId(""),
-          },
-        ]
-      : []),
-    ...(day !== ""
-      ? [
-          {
-            key: "day",
-            label: fullDayLabels[Number(day)],
-            onClear: () => setDay(""),
-          },
-        ]
-      : []),
-    ...(language
-      ? [
-          {
-            key: "language",
-            label: languageLabels[language],
-            onClear: () => setLanguage(""),
-          },
-        ]
-      : []),
-    ...(format
-      ? [
-          {
-            key: "format",
-            label: formatLabels[format],
-            onClear: () => setFormat(""),
-          },
-        ]
-      : []),
+    ...districtIds.map((id) => ({
+      key: `district-${id}`,
+      label: districts.find((d) => d.id === id)?.name ?? "",
+      onClear: () =>
+        setDistrictIds((prev) => prev.filter((v) => v !== id)),
+    })),
+    ...days.map((d) => ({
+      key: `day-${d}`,
+      label: fullDayLabels[Number(d)],
+      onClear: () => setDays((prev) => prev.filter((v) => v !== d)),
+    })),
+    ...languages.map((l) => ({
+      key: `language-${l}`,
+      label: languageLabels[l],
+      onClear: () => setLanguages((prev) => prev.filter((v) => v !== l)),
+    })),
+    ...formats.map((f) => ({
+      key: `format-${f}`,
+      label: formatLabels[f],
+      onClear: () => setFormats((prev) => prev.filter((v) => v !== f)),
+    })),
   ];
 
   return (
@@ -282,33 +268,45 @@ export default function Finder({
         <div className="ml-2 hidden items-center gap-2 md:flex">
           <FilterDropdown
             ariaLabel={t("districtAria")}
-            value={districtId}
+            values={districtIds}
             options={DISTRICT_OPTIONS}
-            onChange={setDistrictId}
+            onChange={setDistrictIds}
+            allLabel={t("allDistricts")}
+            countLabel={(count) => t("districtsCount", { count })}
+            clearLabel={t("clear")}
             className="w-40"
             icon={MapPin}
           />
           <FilterDropdown
             ariaLabel={t("dayAria")}
-            value={day}
+            values={days}
             options={DAY_OPTIONS}
-            onChange={setDay}
+            onChange={setDays}
+            allLabel={t("allDays")}
+            countLabel={(count) => t("daysCount", { count })}
+            clearLabel={t("clear")}
             className="w-40"
             icon={Calendar}
           />
           <FilterDropdown
             ariaLabel={t("languageAria")}
-            value={language}
+            values={languages}
             options={LANGUAGE_OPTIONS}
-            onChange={(v) => setLanguage(v as LanguageFilter)}
+            onChange={setLanguages}
+            allLabel={t("allLanguages")}
+            countLabel={(count) => t("languagesCount", { count })}
+            clearLabel={t("clear")}
             className="w-44"
             icon={Languages}
           />
           <FilterDropdown
             ariaLabel={t("formatAria")}
-            value={format}
+            values={formats}
             options={FORMAT_OPTIONS}
-            onChange={(v) => setFormat(v as FormatFilter)}
+            onChange={setFormats}
+            allLabel={t("allFormats")}
+            countLabel={(count) => t("formatsCount", { count })}
+            clearLabel={t("clear")}
             className="w-40"
             icon={SlidersHorizontal}
           />
@@ -368,14 +366,14 @@ export default function Finder({
         dayOptions={DAY_OPTIONS}
         languageOptions={LANGUAGE_OPTIONS}
         formatOptions={FORMAT_OPTIONS}
-        districtId={districtId}
-        day={day}
-        language={language}
-        format={format}
-        onDistrictChange={setDistrictId}
-        onDayChange={setDay}
-        onLanguageChange={(v) => setLanguage(v as LanguageFilter)}
-        onFormatChange={(v) => setFormat(v as FormatFilter)}
+        districtIds={districtIds}
+        days={days}
+        languages={languages}
+        formats={formats}
+        onDistrictChange={setDistrictIds}
+        onDayChange={setDays}
+        onLanguageChange={setLanguages}
+        onFormatChange={setFormats}
       />
 
       <div className="mt-4 flex items-center justify-between">
