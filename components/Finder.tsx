@@ -291,7 +291,7 @@ export default function Finder({
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder={t("searchPlaceholder")}
           aria-label={t("searchAria")}
-          className={`h-11 w-full rounded-lg border border-border bg-white pl-11 pr-10 text-sm text-ink placeholder:text-ink-muted focus:border-indigo ${hoverTransition}`}
+          className={`h-11 w-full rounded-lg border border-border bg-white pl-11 pr-10 text-base text-ink placeholder:text-ink-muted focus:border-indigo sm:text-sm ${hoverTransition}`}
         />
         {searchInput && (
           <button
