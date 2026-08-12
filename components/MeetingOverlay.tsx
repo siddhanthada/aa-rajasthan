@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useDragControls,
+  type PanInfo,
+  type Variants,
+} from "framer-motion";
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import type { MeetingWithDetails } from "@/lib/data/meetings";
@@ -37,6 +43,16 @@ export default function MeetingOverlay({
   onClose: () => void;
 }) {
   const t = useTranslations("meetingDetail");
+  const dragControls = useDragControls();
+
+  function handleSheetDragEnd(
+    _event: PointerEvent | MouseEvent | TouchEvent,
+    info: PanInfo,
+  ) {
+    if (info.offset.y > 100 || info.velocity.y > 500) {
+      onClose();
+    }
+  }
 
   useEffect(() => {
     if (!meeting) return;
@@ -97,13 +113,24 @@ export default function MeetingOverlay({
             initial="hidden"
             animate="visible"
             exit="exit"
+            drag="y"
+            dragControls={dragControls}
+            dragListener={false}
+            dragConstraints={{ top: 0, bottom: 400 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
+            onDragEnd={handleSheetDragEnd}
           >
             <div className="flex shrink-0 flex-col items-center pt-3">
               <div
-                className="h-1 w-10 rounded-full bg-border"
-                aria-hidden="true"
-              />
-              <div className="flex w-full items-center justify-end px-4 pt-2">
+                className="cursor-grab touch-none px-8 py-1.5 active:cursor-grabbing"
+                onPointerDown={(e) => dragControls.start(e)}
+              >
+                <div
+                  className="h-1 w-10 rounded-full bg-border"
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="flex w-full items-center justify-end px-4 pt-1">
                 <button
                   type="button"
                   aria-label={t("close")}
