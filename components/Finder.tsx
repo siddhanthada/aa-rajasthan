@@ -150,15 +150,23 @@ export default function Finder({
 
   // Cross-fade the result area when the filtered set changes: briefly fade
   // out the old results, swap, then fade the new ones in. Skipped on the
-  // very first render so initial load uses the stagger-in instead.
+  // very first render so initial load uses the stagger-in instead. Guarded
+  // by comparing the signature itself (not a boolean "have I run" flag) so
+  // React Strict Mode's double effect-invocation on mount can't replay the
+  // cross-fade against an unchanged result set.
   const resultsSignature = sorted.map((m) => m.id).join(",");
   const [displayed, setDisplayed] = useState(sorted);
   const [resultsVisible, setResultsVisible] = useState(true);
-  const isFirstRender = useRef(true);
+  const lastSignatureRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (lastSignatureRef.current === resultsSignature) {
+      return;
+    }
+    const isFirstRun = lastSignatureRef.current === null;
+    lastSignatureRef.current = resultsSignature;
+
+    if (isFirstRun) {
       setDisplayed(sorted);
       return;
     }
