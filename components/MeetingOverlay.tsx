@@ -71,11 +71,35 @@ export default function MeetingOverlay({
       if (e.key === "Escape") onClose();
     }
     document.addEventListener("keydown", onKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    // Plain `overflow: hidden` on body doesn't reliably block touch
+    // scrolling on mobile Safari/Chrome — the scroll gesture can still
+    // chain through to the page behind the sheet. Pinning body to its
+    // current scroll offset via `position: fixed` blocks it properly;
+    // scroll position is restored on close.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const previousStyle = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      body.style.position = previousStyle.position;
+      body.style.top = previousStyle.top;
+      body.style.left = previousStyle.left;
+      body.style.right = previousStyle.right;
+      body.style.width = previousStyle.width;
+      window.scrollTo(0, scrollY);
     };
   }, [meeting, onClose]);
 
@@ -153,7 +177,7 @@ export default function MeetingOverlay({
             <div
               ref={contentRef}
               onPointerDown={handleContentPointerDown}
-              className="flex-1 overflow-y-auto px-6 pb-8"
+              className="flex-1 overflow-y-auto overscroll-contain px-6 pb-8"
             >
               <MeetingDetailContent meeting={meeting} staggerEntrance />
             </div>
