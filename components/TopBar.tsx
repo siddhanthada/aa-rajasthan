@@ -69,6 +69,62 @@ function LanguageToggle() {
   );
 }
 
+function NavTabs({
+  navLinks,
+  pathname,
+}: {
+  navLinks: { href: string; label: string }[];
+  pathname: string;
+}) {
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [indicator, setIndicator] = useState<{ left: number; width: number }>(
+    { left: 0, width: 0 },
+  );
+  const activeIndex = navLinks.findIndex((l) => l.href === pathname);
+
+  useLayoutEffect(() => {
+    function measure() {
+      const el = linkRefs.current[activeIndex === -1 ? 0 : activeIndex];
+      if (el) {
+        setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+      }
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [activeIndex, navLinks.length]);
+
+  return (
+    <nav className="relative hidden flex-1 items-center justify-center gap-10 md:flex">
+      {navLinks.map((link, i) => {
+        const active = pathname === link.href;
+        return (
+          <Link
+            key={link.href}
+            ref={(el) => {
+              linkRefs.current[i] = el;
+            }}
+            href={link.href}
+            className={`text-[14px] font-semibold motion-safe:transition-opacity motion-safe:duration-[var(--duration-base)] ${
+              active ? "text-white" : "text-white/70 hover:text-white"
+            }`}
+          >
+            {link.label}
+          </Link>
+        );
+      })}
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-2 left-0 h-[3px] rounded-full bg-terracotta motion-safe:transition-[transform,width] motion-safe:duration-[var(--duration-base)] motion-safe:ease-decel"
+        style={{
+          transform: `translateX(${indicator.left}px)`,
+          width: indicator.width,
+        }}
+      />
+    </nav>
+  );
+}
+
 export default function TopBar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
@@ -109,7 +165,7 @@ export default function TopBar() {
         />
       </svg>
 
-      <Container className="relative flex h-[68px] items-center gap-4">
+      <Container className="relative flex h-[68px] items-center gap-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-terracotta text-[13px] font-semibold text-white">
             AA
@@ -129,26 +185,9 @@ export default function TopBar() {
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        <nav className="hidden flex-1 items-center justify-center gap-12 md:flex">
-          {navLinks.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-[12px] font-medium uppercase tracking-[0.04em] text-white motion-safe:transition-opacity motion-safe:duration-[var(--duration-base)] ${
-                  active
-                    ? "underline decoration-2 underline-offset-[2px] opacity-100"
-                    : "opacity-75 hover:opacity-100"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <NavTabs navLinks={navLinks} pathname={pathname} />
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-4">
           <a
             href="tel:+911414000000"
             aria-label={t("helpline")}
